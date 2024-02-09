@@ -2,6 +2,22 @@
 #include<vector>
 #include<stdlib.h>
 #include<time.h>
+#include <thread>
+#include <chrono>
+
+
+//the colors
+#define RESET   "\033[0m"
+#define BLACK   "\033[30m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define BLUE    "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN    "\033[36m"
+#define WHITE   "\033[37m"
+
+
 
 //to hold our spaceship horizontal and vertical location and it's heal
 struct Spaceship{
@@ -17,20 +33,34 @@ struct MapInfo{
 } ;
 
 
+struct Enemy{
+std::string name ;
+int heal ; 
+int point ;
+int x ;
+int y ;
+};
+
+
+
 
 void SatrtMenue() ; //to make start menue
+void Guidence() ; //to guide user to play
 MapInfo MapSize() ; //to take map size and point from user
 void RunGame() ; //to run game
-void Space (int& size , std::vector<std::vector<char>>& space , int& x , int& y , int& EnemyHeal , int& EnemyPosition) ; //to give the first position to spaceships
-void Map(int& size, std::vector<std::vector<char>>& space, int& heal) ; //to generate map
+void Space (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy) ; //to give the first position to spaceships
+void Map(MapInfo mapInfo, std::vector<std::vector<char>>& space, int& heal , int& CurrentPoint) ; //to generate map
 int Dart(int& size, std::vector<std::vector<char>>& space) ; //to make Dart spaceship and return its y
 int Striker(int& size, std::vector<std::vector<char>>& space) ; //to make Striker spaceship and return its y
 int Wraith(int& size, std::vector<std::vector<char>>& space) ; //to make Wraith spaceship and return its y
 int Banshee(int& size, std::vector<std::vector<char>>& space) ; //to make Banshee spaceship and return its y
-
-
-
-
+void Mover(Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , int& CurrentPoint ) ; //to move spaceships
+void MoveEnemy (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo) ; //to move enemy
+void Attack (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , int& CurrentPoint) ; //to do attack action
+void Right (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo, int& CurrentPoint) ; //to do right action
+void Left (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo, int& CurrentPoint) ; //to dp left action
+void DestroyEnemy(std::vector<std::vector<char>>& space , MapInfo& mapInfo ) ; // to destroy enemy
+void InsertEnemy(int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy) ;
 
 
 int main(){
@@ -45,7 +75,8 @@ return 0 ;
 void SatrtMenue(){
 std::cout<<"1- start game"<<'\n' ;
 std::cout<<"2- continue game"<<'\n' ;
-std::cout<<"3- exit"<<'\n' ;
+std::cout<<"3- guidence"<<'\n' ;
+std::cout<<"4- exit"<<'\n' ;
 int choice ;
 std::cin>>choice ;
 
@@ -58,6 +89,9 @@ case 2 :
     //LoadGame() ;
     break ;
 case 3 :
+    Guidence() ;
+    break;
+case 4 :
     //ExitGame() ;
     break ;
 
@@ -67,6 +101,32 @@ std::cout<<"invalid choice"<<'\n' ;
 }
 
 }
+
+
+//to guide user to play
+void Guidence(){
+
+std::cout<<"W : shoot straight"<<'\n' ;
+std::cout<<"D : move rigth and shoot"<<'\n' ;
+std::cout<<"A : move left and shoot\n" ;
+std::cout<<"P : puse game"<<'\n' ;
+int leave ;
+do{
+std::cout<<"enter 0 to leave\n" ;
+std::cin>>leave ;
+if(leave == 0)
+    SatrtMenue() ;
+else
+    std::cout<<"invalid input\n" ;
+}while (leave !=0) ;
+
+
+
+}
+
+
+
+
 
 
 //to take size of the map from user
@@ -101,69 +161,105 @@ void RunGame(){
 MapInfo mapInfo = MapSize() ; //size of the map
 Spaceship spaceship ;
 spaceship.heal = 3 ;
-std::vector<std::vector<char>> space(mapInfo.size, std::vector<char>(mapInfo.size, ' '));
-int EnemyHeal ;
-int EnemyPosition ;
+std::vector<std::vector<char>> space(mapInfo.size, std::vector<char>(mapInfo.size, ' ')); //to create empty spaces in map
+Enemy enemy ;
+int CurrentPoint ;
 
-Space(mapInfo.size , space , spaceship.x , spaceship.y , EnemyHeal , EnemyPosition) ;
-Map(mapInfo.size, space, spaceship.heal);
+Space(mapInfo.size , space , spaceship , enemy) ;
+Map(mapInfo , space, spaceship.heal , CurrentPoint);
+while(CurrentPoint<mapInfo.point){
+Mover(spaceship , enemy , space , mapInfo , CurrentPoint) ;
+if(enemy.heal == 0){
+    CurrentPoint += enemy.point ;
+    DestroyEnemy(space , mapInfo) ;
+    InsertEnemy(mapInfo.size , space , spaceship , enemy) ;
+    Map(mapInfo , space, spaceship.heal , CurrentPoint);
+
+}
+}
 
 
 }
 
 
 //to give the first position to the spaceships
-void Space (int& size , std::vector<std::vector<char>>& space , int& x , int& y , int& EnemyHeal , int& EnemyPosition){
+void Space (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy){
+
+spaceship.x = size -1 ;
+spaceship.y = static_cast<int>(size/2) -1 ;
+space[spaceship.x][spaceship.y] = '#';
+InsertEnemy(size , space , spaceship , enemy) ;
+
+}
+
+
+//to create enemy
+void InsertEnemy(int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy){
 
 srand(time(0)) ;
 int RandomEnemy = rand()%4;
-x = size -1 ;
-y = static_cast<int>(size/2) -1 ;
-space[x][y] = '#';
 switch (RandomEnemy)
 {
 case 0 :
-   EnemyPosition = Dart(size , space) ;
-   EnemyHeal = 1 ;
+   enemy.name = "Dart" ;
+   enemy.point = 2 ;
+   enemy.x = 0 ;
+   enemy.y = Dart(size , space) ;
+   enemy.heal = 1 ;
     break;
-    case 1 :
-   EnemyPosition = Striker(size , space) ;
-   EnemyHeal = 2 ;
+case 1 :
+    enemy.name = "Striker" ;
+    enemy.point = 8 ;
+    enemy.x = 0 ;
+    enemy.y = Striker(size , space) ;
+    enemy.heal = 2 ;
     break;
-    case 2 :
-   EnemyPosition = Wraith(size , space) ;
-   EnemyHeal = 4 ;
+case 2 :
+    enemy.name = "Wraith" ;
+    enemy.point = 18 ;
+    enemy.x = 0 ;
+    enemy.y = Wraith(size , space) ;
+    enemy.heal = 4 ;
     break;
-    case 3 :
-   EnemyPosition = Banshee(size , space) ;
-   EnemyHeal = 6 ;
+case 3 :
+    enemy.name = "Banshee" ;
+    enemy.point = 32 ;
+    enemy.x = 0 ;
+    enemy.y = Banshee(size , space) ;
+    enemy.heal = 6 ;
     break;
 
 }
 
 
+
 }
+
+
 
 
 
 
 // to make map
-void Map(int& size, std::vector<std::vector<char>>& space, int& heal){
+void Map(MapInfo mapInfo , std::vector<std::vector<char>>& space, int& heal , int& CurrentPoint){
 
-if(size>=15){
+system ("CLS"); //to clear the screen
+
+if(mapInfo.size>=15){
 std::cout<<"your heal : "<<heal<<'\t' ;
-std::cout<<"size of the map : "<<size<<" x "<<size<<'\t' ;
+std::cout<<"size of the map : "<<mapInfo.size<<" x "<<mapInfo.size<<'\t' ;
+std::cout<<"your current point : "<<CurrentPoint<<'\t' ;
 std::cout<<"pause(enter p)"<<'\n' ;
 
 
-for(int i =0 ;i<size ; i++){
+for(int i =0 ;i<mapInfo.size ; i++){
 
- for(int j= 0 ;j<size ; j++){
+ for(int j= 0 ;j<mapInfo.size ; j++){
      std::cout<<" ---";
  }
      std::cout<<'\n';
- for(int k =0; k<=size ; k++){
-    if(k==size)
+ for(int k =0; k<=mapInfo.size ; k++){
+    if(k==mapInfo.size)
     std::cout<<"|" ;
     else
 	std::cout<<"|"<<' '<<space[i][k]<<' ' ;
@@ -173,7 +269,7 @@ std::cout<<'\n' ;
 
 }
 
-for(int i = 0 ; i<size ; i++)
+for(int i = 0 ; i<mapInfo.size ; i++)
 std::cout<<" ---";
 
 std::cout<<'\n' ;
@@ -294,5 +390,154 @@ space[3][y+2] = '*' ;
 space[3][y+3] = '*' ;
 }
 return y ;
+
+}
+
+
+
+//to move  spaceships
+void Mover(Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , int& CurrentPoint){
+char move ;
+std::cin>>move ;
+switch (move)
+{
+case 'w' :
+    Attack(spaceship , enemy , space , mapInfo , CurrentPoint) ;
+    break;
+case 'd':
+    Right(spaceship , enemy , space , mapInfo , CurrentPoint) ;
+    break;
+case 'a' :
+    Left(spaceship , enemy , space , mapInfo , CurrentPoint) ;
+    break;
+
+default:
+    std::cerr<<"invalid input"<<'\n' ;
+    break;
+}
+
+}
+
+
+
+//to move enemy
+void MoveEnemy (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo){
+
+
+if(enemy.name == "Dart"){
+        space[enemy.x][enemy.y] = ' ' ;
+        enemy.x++ ;
+        space[enemy.x][enemy.y] = '*' ;
+}
+
+
+if(enemy.name =="Striker"){
+    for(int i = 0 ; i<mapInfo.size ; i++){
+        
+    if(space[enemy.x][i] =='*'){
+        space[enemy.x+2][i] ='*' ;
+        space[enemy.x][i] = ' ' ;
+    }
+
+    }
+    enemy.x++ ;
+
+}
+
+
+
+if(enemy.name =="Wraith"){
+    for(int i = 0 ; i<mapInfo.size ; i++){
+        
+    if(space[enemy.x][i] =='*'){
+        space[enemy.x+3][i] ='*' ;
+        space[enemy.x][i] = ' ' ;
+    }
+
+    }
+    enemy.x++ ;
+
+}
+
+
+
+if(enemy.name =="Banshee"){
+    for(int i = 0 ; i<mapInfo.size ; i++){
+        
+    if(space[enemy.x][i] =='*'){
+        space[enemy.x+4][i] ='*' ;
+        space[enemy.x][i] = ' ' ;
+    }
+
+    }
+    enemy.x++ ;
+
+}
+
+
+}
+
+//to do attack action
+void Attack (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , int& CurrentPoint){
+
+for(int i = 1; i<mapInfo.size ; i++){
+        if(space[spaceship.x-i][spaceship.y]==' '){
+            space[spaceship.x-i][spaceship.y] ='^' ;
+            Map(mapInfo, space, spaceship.heal , CurrentPoint) ;
+            std::this_thread::sleep_for(std::chrono::milliseconds(25));
+            space[spaceship.x-i][spaceship.y] =' ' ;
+        }
+
+        if(space[spaceship.x-i][spaceship.y]=='*'){
+            enemy.heal-- ;
+            space[spaceship.x-i-1][spaceship.y]==' ' ;
+            std::cout<<enemy.heal ;
+            break ;
+        }       
+    }
+
+    MoveEnemy(spaceship , enemy , space , mapInfo) ;
+    Map(mapInfo, space, spaceship.heal , CurrentPoint) ;
+
+}
+
+
+
+
+//to do right action
+void Right (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , int& CurrentPoint){
+
+
+space[spaceship.x][spaceship.y]= ' ' ;
+spaceship.y++ ;
+space[spaceship.x][spaceship.y]= '#' ;
+Attack(spaceship , enemy , space , mapInfo , CurrentPoint) ;
+
+
+}
+
+
+
+//to do left action
+void Left (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , int& CurrentPoint){
+
+space[spaceship.x][spaceship.y]= ' ' ;
+spaceship.y-- ;
+space[spaceship.x][spaceship.y]= '#' ;
+Attack(spaceship , enemy , space , mapInfo , CurrentPoint) ;
+
+}
+
+
+
+//to destroy enemy
+void DestroyEnemy(std::vector<std::vector<char>>& space , MapInfo& mapInfo){
+
+for(int i = 0 ; i<mapInfo.size ; i++){
+    for(int j = 0 ; j<mapInfo.size ; j++){
+        if(space[i][j] == '*')
+             space[i][j] = ' ' ;
+    }
+}
 
 }

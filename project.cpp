@@ -45,9 +45,11 @@ int y ;
 
 
 void SatrtMenue() ; //to make start menue
+void Puase() ; //to show pause menue
 void Guidence() ; //to guide user to play
 MapInfo MapSize() ; //to take map size and point from user
-void RunGame() ; //to run game
+void GenerateGame() ; //to generate game
+void RunGame(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint ,std::vector<std::vector<char>>& space) ; //to run game
 void Space (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy) ; //to give the first position to spaceships
 void Map(MapInfo mapInfo, std::vector<std::vector<char>>& space, int& heal , int& CurrentPoint) ; //to generate map
 int Dart(int& size, std::vector<std::vector<char>>& space) ; //to make Dart spaceship and return its y
@@ -60,7 +62,7 @@ void Attack (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>
 void Right (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo, int& CurrentPoint) ; //to do right action
 void Left (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo, int& CurrentPoint) ; //to dp left action
 void DestroyEnemy(std::vector<std::vector<char>>& space , MapInfo& mapInfo ) ; // to destroy enemy
-void InsertEnemy(int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy) ;
+void InsertEnemy(int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy) ; // to insert enemy in map
 
 
 int main(){
@@ -78,12 +80,12 @@ std::cout<<"2- continue game"<<'\n' ;
 std::cout<<"3- guidence"<<'\n' ;
 std::cout<<"4- exit"<<'\n' ;
 int choice ;
+do{
 std::cin>>choice ;
-
 switch (choice)
 {
 case 1 :
-    RunGame() ;
+    GenerateGame() ;
     break;
 case 2 :
     //LoadGame() ;
@@ -99,7 +101,32 @@ default:
 std::cout<<"invalid choice"<<'\n' ;
     break;
 }
+}while(choice != 1 && choice != 2 && choice != 3 && choice != 4 ) ;
 
+}
+
+
+//to show puase menue
+void Puase(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint ,std::vector<std::vector<char>>& space){
+    system ("CLs") ;
+    std::cout<<"1- Resume game"<<'\n' ;
+    std::cout<<"2 - Save and Leave game"<<'\n' ;
+    int option ;
+    do{
+    std::cin>>option ;
+    switch (option)
+    {
+    case 1 :
+    Map(mapInfo , space, spaceship.heal , CurrentPoint);
+    RunGame(mapInfo , spaceship , enemy , CurrentPoint , space) ;
+        break;
+    case 2 :
+        break;
+    default:
+    std::cerr<<"invalid input"<<'\n' ;
+        break;
+    }
+    }while(option != 1 && option != 2) ;
 }
 
 
@@ -157,16 +184,25 @@ return mapInfo ;
 
 
 // to run the game
-void RunGame(){
+void GenerateGame(){
 MapInfo mapInfo = MapSize() ; //size of the map
 Spaceship spaceship ;
 spaceship.heal = 3 ;
 std::vector<std::vector<char>> space(mapInfo.size, std::vector<char>(mapInfo.size, ' ')); //to create empty spaces in map
 Enemy enemy ;
 int CurrentPoint ;
-
 Space(mapInfo.size , space , spaceship , enemy) ;
 Map(mapInfo , space, spaceship.heal , CurrentPoint);
+RunGame(mapInfo , spaceship , enemy , CurrentPoint , space) ;
+
+}
+
+
+
+//to run game
+void RunGame(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint ,std::vector<std::vector<char>>& space){
+
+
 while(CurrentPoint<mapInfo.point){
 Mover(spaceship , enemy , space , mapInfo , CurrentPoint) ;
 if(enemy.heal == 0){
@@ -178,8 +214,9 @@ if(enemy.heal == 0){
 }
 }
 
-
 }
+
+
 
 
 //to give the first position to the spaceships
@@ -409,6 +446,9 @@ case 'd':
     break;
 case 'a' :
     Left(spaceship , enemy , space , mapInfo , CurrentPoint) ;
+    break;
+case 'p' :
+    Puase(mapInfo , spaceship , enemy , CurrentPoint , space) ;
     break;
 
 default:

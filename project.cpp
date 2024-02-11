@@ -72,8 +72,8 @@ void Damage(Spaceship& spaceship , std::vector<std::vector<char>>& space , Enemy
 void SaveGame(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo) ; //to save game in a textfile
 void LoadGame(Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo) ; //to load game from aa textfile
 int stringToInt(std::string txt) ; //to convert string to int
-
-
+void Win(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo) ; //to show win popup
+void Lose() ; //to show lose popup
 
 
 
@@ -337,6 +337,8 @@ void ExitGame(){
 system("cls") ;
 std::cout<<"are you sure you want to exit(1 : yes , 0 : no )?" ;
 int sure ;
+
+do{
 std::cin>>sure ;
 if(sure== 1)
     exit(0) ;  
@@ -344,6 +346,10 @@ else if(sure == 0)
     SatrtMenue() ;
 else
     std::cout<<"invalid input"<<'\n' ;
+
+}while (sure != 1 && sure != 0) ;
+
+
 
 }
 
@@ -442,39 +448,20 @@ if(enemy.heal == 0){
     CurrentPoint += enemy.point ;
     DestroyEnemy(space , mapInfo) ;
     InsertEnemy(mapInfo.size , space , spaceship , enemy) ;
+    SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo) ;
     Map(mapInfo , space, spaceship.heal , CurrentPoint);
 
 }
 }
 if(spaceship.heal<1){
-    system("CLS") ;
-    std::cout<<"you faild\n" ;
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    std::ofstream("GameInfo.txt") ;
-    SatrtMenue() ;
+Lose() ;
 }
-else{
-    
-    system("CLS") ;
-    std::cout<<"you won\n" ;
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    std::cout<<"do you want continue(1 : yes , 0 : no)?\n" ;
-    int YN ;
-    std::cin>>YN ;
-    if(YN== 1){
-    
-    std::cout<<"enter a new total point  : " ;   
-    std::cin>>mapInfo.point ;
-    SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo) ;
-    GenerateGame(2) ;
-    }
-    else if(YN==0){
-         std::ofstream("GameInfo.txt") ;
-         SatrtMenue() ;
+else{   
+Win(space , spaceship ,  enemy , CurrentPoint , mapInfo) ;
 }
 }
 
-}
+
 
 
 
@@ -1089,4 +1076,50 @@ int stringToInt(std::string txt){
 	
 	}
 	return num ;
+}
+
+
+
+//to show win popup
+void Win(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo){
+
+    
+system("CLS") ;
+std::cout<<"you won\n" ;
+std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+std::cout<<"do you want continue(1 : yes , 0 : no)?\n" ;
+int YN ;
+do{
+std::cin>>YN ;
+if(YN== 1){
+    
+std::cout<<"enter a new total point  : " ;   
+std::cin>>mapInfo.point ;
+SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo) ;
+GenerateGame(2) ;
+}
+else if(YN==0){
+    std::ofstream("GameInfo.txt") ;
+    SatrtMenue() ;
+}
+else{
+    std::cout<<"invalid input"<<'\n' ;
+}
+}while (YN != 1 && YN != 0) ;
+
+
+
+}
+
+
+//to show lose popup
+void Lose(){
+
+system("CLS") ;
+std::cout<<"you faild\n" ;
+std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+std::ofstream("GameInfo.txt") ;
+SatrtMenue() ;
+
+
 }

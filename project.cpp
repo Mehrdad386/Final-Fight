@@ -4,7 +4,8 @@
 #include<time.h>
 #include <thread>
 #include <chrono>
-
+#include<fstream>
+#include<sstream>
 
 //the colors
 #define RESET   "\033[0m"
@@ -39,6 +40,7 @@ int heal ;
 int point ;
 int x ;
 int y ;
+bool ltr ;
 };
 
 
@@ -47,15 +49,16 @@ int y ;
 void SatrtMenue() ; //to make start menue
 void Puase() ; //to show pause menue
 void Guidence() ; //to guide user to play
+void ExitGame() ; //to exit game
 MapInfo MapSize() ; //to take map size and point from user
 void GenerateGame() ; //to generate game
 void RunGame(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint ,std::vector<std::vector<char>>& space) ; //to run game
 void Space (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy) ; //to give the first position to spaceships
 void Map(MapInfo mapInfo, std::vector<std::vector<char>>& space, int& heal , int& CurrentPoint) ; //to generate map
-int Dart(int& size, std::vector<std::vector<char>>& space) ; //to make Dart spaceship and return its y
-int Striker(int& size, std::vector<std::vector<char>>& space) ; //to make Striker spaceship and return its y
-int Wraith(int& size, std::vector<std::vector<char>>& space) ; //to make Wraith spaceship and return its y
-int Banshee(int& size, std::vector<std::vector<char>>& space) ; //to make Banshee spaceship and return its y
+int Dart(int& size, std::vector<std::vector<char>>& space , Enemy& enemy) ; //to make Dart spaceship and return its y
+int Striker(int& size, std::vector<std::vector<char>>& space, Enemy& enemy) ; //to make Striker spaceship and return its y
+int Wraith(int& size, std::vector<std::vector<char>>& space, Enemy& enemy) ; //to make Wraith spaceship and return its y
+int Banshee(int& size, std::vector<std::vector<char>>& space, Enemy& enemy) ; //to make Banshee spaceship and return its y
 void Mover(Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , int& CurrentPoint ) ; //to move spaceships
 void MoveEnemy (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo) ; //to move enemy
 void Attack (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , int& CurrentPoint) ; //to do attack action
@@ -63,7 +66,9 @@ void Right (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>&
 void Left (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo, int& CurrentPoint) ; //to dp left action
 void DestroyEnemy(std::vector<std::vector<char>>& space , MapInfo& mapInfo ) ; // to destroy enemy
 void InsertEnemy(int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy) ; // to insert enemy in map
-
+void Damage(Spaceship& spaceship , std::vector<std::vector<char>>& space , Enemy& enemy , MapInfo& mapInfo ) ; //to decrease our heal when the spaceships are in collision
+void SaveGame(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo) ; //to save game in a textfile
+void LoadGame(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo) ; //to load game from aa textfile
 
 int main(){
 
@@ -75,10 +80,11 @@ return 0 ;
 
 //to show the menue to user and  ask how he wants to play
 void SatrtMenue(){
-std::cout<<"1- start game"<<'\n' ;
-std::cout<<"2- continue game"<<'\n' ;
-std::cout<<"3- guidence"<<'\n' ;
-std::cout<<"4- exit"<<'\n' ;
+system ("CLS") ;
+std::cout<<"1- Start game"<<'\n' ;
+std::cout<<"2- Load game"<<'\n' ;
+std::cout<<"3- Guidence"<<'\n' ;
+std::cout<<"4- Exit game"<<'\n' ;
 int choice ;
 do{
 std::cin>>choice ;
@@ -94,7 +100,7 @@ case 3 :
     Guidence() ;
     break;
 case 4 :
-    //ExitGame() ;
+    ExitGame() ;
     break ;
 
 default:
@@ -104,6 +110,57 @@ std::cout<<"invalid choice"<<'\n' ;
 }while(choice != 1 && choice != 2 && choice != 3 && choice != 4 ) ;
 
 }
+
+
+
+//to save game in a text file
+void SaveGame(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo){
+
+std::ofstream Save ;
+
+Save.open("GameInfo.txt" ,  std::ios::out) ;
+
+if(Save.is_open()){
+Save<<spaceship.heal<<' '<<spaceship.x<<' '<<spaceship.y<<'\n' ;
+
+Save<<enemy.name<<' '<<enemy.point<<' '<<enemy.heal<<' '<<enemy.ltr<<' '<<enemy.x<<' '<<enemy.y<<'\n' ;
+
+Save<<mapInfo.size<<' '<<mapInfo.point<<'\n' ;
+
+Save<<CurrentPoint<<'\n' ;
+
+// for(int i = 0 ; i<mapInfo.size ; i++){
+//     for(int j = 0 ; j<mapInfo.size ; j++){
+//         Save<<space[i][j]<<' ' ;
+//     }
+// }
+
+}
+else{
+    std::cerr<<"cant open the file\n" ;
+}
+
+
+
+}
+
+
+
+// to load game from textfile
+void LoadGame(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo){
+
+std::ifstream Load ;
+Load.open("GameInfo.txt" , std::ios::out) ;
+std::ofstream file("GameInfo.txt");
+
+
+
+}
+
+
+
+
+
 
 
 //to show puase menue
@@ -121,6 +178,8 @@ void Puase(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& Current
     RunGame(mapInfo , spaceship , enemy , CurrentPoint , space) ;
         break;
     case 2 :
+    SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo) ;
+    SatrtMenue() ;
         break;
     default:
     std::cerr<<"invalid input"<<'\n' ;
@@ -150,6 +209,25 @@ else
 
 
 }
+
+
+
+//to exit game
+void ExitGame(){
+system("cls") ;
+std::cout<<"are you sure you want to exit(1 : yes , 0 : no )?" ;
+int sure ;
+std::cin>>sure ;
+if(sure== 1)
+    exit(0) ;  
+else if(sure == 0)
+    SatrtMenue() ;
+else
+    std::cout<<"invalid input"<<'\n' ;
+
+}
+
+
 
 
 
@@ -185,14 +263,24 @@ return mapInfo ;
 
 // to run the game
 void GenerateGame(){
+
 MapInfo mapInfo = MapSize() ; //size of the map
+
 Spaceship spaceship ;
 spaceship.heal = 3 ;
+
 std::vector<std::vector<char>> space(mapInfo.size, std::vector<char>(mapInfo.size, ' ')); //to create empty spaces in map
+
 Enemy enemy ;
+
 int CurrentPoint ;
+
+SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo) ;
+
 Space(mapInfo.size , space , spaceship , enemy) ;
-Map(mapInfo , space, spaceship.heal , CurrentPoint);
+
+Map(mapInfo , space, spaceship.heal , CurrentPoint) ;
+
 RunGame(mapInfo , spaceship , enemy , CurrentPoint , space) ;
 
 }
@@ -204,6 +292,9 @@ void RunGame(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& Curre
 
 
 while(CurrentPoint<mapInfo.point){
+    if(spaceship.heal <1){
+        break;
+    }
 Mover(spaceship , enemy , space , mapInfo , CurrentPoint) ;
 if(enemy.heal == 0){
     CurrentPoint += enemy.point ;
@@ -211,6 +302,26 @@ if(enemy.heal == 0){
     InsertEnemy(mapInfo.size , space , spaceship , enemy) ;
     Map(mapInfo , space, spaceship.heal , CurrentPoint);
 
+}
+}
+if(spaceship.heal<1){
+    system("CLS") ;
+    std::cout<<"you faild\n" ;
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    SatrtMenue() ;
+}
+else{
+    system("CLS") ;
+    std::cout<<"you won\n" ;
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::cout<<"do you want continue(1 : yes , 0 : no)?\n" ;
+    int YN ;
+    std::cin>>YN ;
+    if(YN== 1){
+         //LoadGame() ;
+    }
+    else if(YN==0){
+         SatrtMenue() ;
 }
 }
 
@@ -241,28 +352,28 @@ case 0 :
    enemy.name = "Dart" ;
    enemy.point = 2 ;
    enemy.x = 0 ;
-   enemy.y = Dart(size , space) ;
+   enemy.y = Dart(size , space , enemy) ;
    enemy.heal = 1 ;
     break;
 case 1 :
     enemy.name = "Striker" ;
     enemy.point = 8 ;
     enemy.x = 0 ;
-    enemy.y = Striker(size , space) ;
+    enemy.y = Striker(size , space , enemy) ;
     enemy.heal = 2 ;
     break;
 case 2 :
     enemy.name = "Wraith" ;
     enemy.point = 18 ;
     enemy.x = 0 ;
-    enemy.y = Wraith(size , space) ;
+    enemy.y = Wraith(size , space , enemy) ;
     enemy.heal = 4 ;
     break;
 case 3 :
     enemy.name = "Banshee" ;
     enemy.point = 32 ;
     enemy.x = 0 ;
-    enemy.y = Banshee(size , space) ;
+    enemy.y = Banshee(size , space , enemy) ;
     enemy.heal = 6 ;
     break;
 
@@ -315,12 +426,12 @@ std::cout<<'\n' ;
 }
 }
 //to make Dart spaceship and return its position
-int Dart(int& size, std::vector<std::vector<char>>& space){
+int Dart(int& size, std::vector<std::vector<char>>& space, Enemy& enemy){
 
 srand(time(0)) ;
 int y = rand()%size ;
 space[0][y] = '*' ;
-
+enemy.ltr = true ;
 return y ;
 
 }
@@ -329,7 +440,7 @@ return y ;
 
 
 //to make Striker spaceship and return its position
-int Striker(int& size, std::vector<std::vector<char>>& space){
+int Striker(int& size, std::vector<std::vector<char>>& space, Enemy& enemy){
 
 srand(time(0)) ;
 int y = rand()%size ;
@@ -338,12 +449,14 @@ space[0][y] = '*' ;
 space[0][y-1] = '*' ;
 space[1][y] = '*' ;
 space[1][y-1] = '*' ;
+enemy.ltr = false ;
 }
 else{
 space[0][y] = '*' ;
 space[0][y+1] = '*' ;
 space[1][y] = '*' ;
 space[1][y+1] = '*' ;
+enemy.ltr = true ;
 
 }
 
@@ -353,7 +466,7 @@ return y ;
 
 
 //to make Wraith spaceship and return its position
-int Wraith(int& size, std::vector<std::vector<char>>& space){
+int Wraith(int& size, std::vector<std::vector<char>>& space, Enemy& enemy){
 
 srand(time(0)) ;
 int y = rand()%size ;
@@ -367,6 +480,7 @@ space[1][y-2] = '*' ;
 space[2][y] = '*' ;
 space[2][y-1] = '*' ;
 space[2][y-2] = '*' ;
+enemy.ltr = false ;
 }
 else{
 space[0][y] = '*' ;
@@ -378,6 +492,7 @@ space[1][y+2] = '*' ;
 space[2][y] = '*' ;
 space[2][y+1] = '*' ;
 space[2][y+2] = '*' ;
+enemy.ltr = true ;
 
 }
 return y ;
@@ -385,7 +500,7 @@ return y ;
 }
 
 //to make Banshee spaceship and return its position
-int Banshee(int& size, std::vector<std::vector<char>>& space){
+int Banshee(int& size, std::vector<std::vector<char>>& space, Enemy& enemy){
 
 
 srand(time(0)) ;
@@ -407,6 +522,7 @@ space[3][y] = '*' ;
 space[3][y-1] = '*' ;
 space[3][y-2] = '*' ;
 space[3][y-3] = '*' ;
+enemy.ltr = false ;
 }
 else{
 space[0][y] = '*' ;
@@ -425,6 +541,7 @@ space[3][y] = '*' ;
 space[3][y+1] = '*' ;
 space[3][y+2] = '*' ;
 space[3][y+3] = '*' ;
+enemy.ltr = true ;
 }
 return y ;
 
@@ -465,13 +582,25 @@ void MoveEnemy (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<cha
 
 
 if(enemy.name == "Dart"){
+    if(enemy.x < mapInfo.size - 2){
         space[enemy.x][enemy.y] = ' ' ;
         enemy.x++ ;
         space[enemy.x][enemy.y] = '*' ;
+    }
+    else if(enemy.x == mapInfo.size-2){
+        Damage(spaceship , space , enemy , mapInfo ) ;
+    }
+    else if (enemy.x == mapInfo.size-1){
+        DestroyEnemy(space , mapInfo) ;
+        InsertEnemy(mapInfo.size , space , spaceship , enemy) ;
+        //Map(mapInfo , space, spaceship.heal , CurrentPoint);
+    }
 }
 
 
+
 if(enemy.name =="Striker"){
+    if(enemy.x < mapInfo.size - 3){
     for(int i = 0 ; i<mapInfo.size ; i++){
         
     if(space[enemy.x][i] =='*'){
@@ -481,12 +610,22 @@ if(enemy.name =="Striker"){
 
     }
     enemy.x++ ;
+    }
+    else if(enemy.x == mapInfo.size-3){
+        Damage(spaceship , space , enemy , mapInfo ) ;
+    }
+        else if (enemy.x == mapInfo.size-2){
+        DestroyEnemy(space , mapInfo) ;
+        InsertEnemy(mapInfo.size , space , spaceship , enemy) ;
+        //Map(mapInfo , space, spaceship.heal , CurrentPoint);
+    }
 
 }
 
 
 
 if(enemy.name =="Wraith"){
+    if(enemy.x < mapInfo.size - 4){
     for(int i = 0 ; i<mapInfo.size ; i++){
         
     if(space[enemy.x][i] =='*'){
@@ -496,12 +635,21 @@ if(enemy.name =="Wraith"){
 
     }
     enemy.x++ ;
-
+    }
+    else if(enemy.x == mapInfo.size-4){
+        Damage(spaceship , space , enemy , mapInfo ) ;
+    }
+        else if (enemy.x == mapInfo.size-3){
+        DestroyEnemy(space , mapInfo) ;
+        InsertEnemy(mapInfo.size , space , spaceship , enemy) ;
+        //Map(mapInfo , space, spaceship.heal , CurrentPoint);
+    }
 }
 
 
 
 if(enemy.name =="Banshee"){
+    if(enemy.x < mapInfo.size - 5){
     for(int i = 0 ; i<mapInfo.size ; i++){
         
     if(space[enemy.x][i] =='*'){
@@ -511,7 +659,15 @@ if(enemy.name =="Banshee"){
 
     }
     enemy.x++ ;
-
+    }
+    else if(enemy.x == mapInfo.size-5){
+        Damage(spaceship , space , enemy , mapInfo ) ;
+    }
+        else if (enemy.x == mapInfo.size-4){
+        DestroyEnemy(space , mapInfo) ;
+        InsertEnemy(mapInfo.size , space , spaceship , enemy) ;
+        //Map(mapInfo , space, spaceship.heal , CurrentPoint);
+    }
 }
 
 
@@ -547,28 +703,27 @@ for(int i = 1; i<mapInfo.size ; i++){
 //to do right action
 void Right (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , int& CurrentPoint){
 
-
+if(spaceship.y != mapInfo.size-1){
 space[spaceship.x][spaceship.y]= ' ' ;
 spaceship.y++ ;
 space[spaceship.x][spaceship.y]= '#' ;
 Attack(spaceship , enemy , space , mapInfo , CurrentPoint) ;
 
-
+}
 }
 
 
 
 //to do left action
 void Left (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , int& CurrentPoint){
-
+if(spaceship.y != 0 ){
 space[spaceship.x][spaceship.y]= ' ' ;
 spaceship.y-- ;
 space[spaceship.x][spaceship.y]= '#' ;
 Attack(spaceship , enemy , space , mapInfo , CurrentPoint) ;
-
 }
 
-
+}
 
 //to destroy enemy
 void DestroyEnemy(std::vector<std::vector<char>>& space , MapInfo& mapInfo){
@@ -581,3 +736,140 @@ for(int i = 0 ; i<mapInfo.size ; i++){
 }
 
 }
+
+
+
+
+//to decrease our heal when the spaceships are in collision
+void Damage(Spaceship& spaceship , std::vector<std::vector<char>>& space , Enemy& enemy , MapInfo& mapInfo ){
+enemy.x++ ;
+if(enemy.name == "Dart"){
+    if(enemy.x == spaceship.x && enemy.y == spaceship.y){
+        spaceship.heal-- ;
+        enemy.x--;
+
+    }else{
+        enemy.x-- ;
+        space[enemy.x][enemy.y] = ' ' ;
+        enemy.x++ ;
+        space[enemy.x][enemy.y] = '*' ;
+    }
+
+}
+
+if(enemy.name == "Striker" && enemy.ltr){
+    if(enemy.x + 1 == spaceship.x && (enemy.y==spaceship.y|| enemy.y +1 == spaceship.y)){
+        spaceship.heal-- ;
+        enemy.x--;
+
+    }else{
+        enemy.x--;
+    for(int i = 0 ; i<mapInfo.size ; i++){
+        
+    if(space[enemy.x][i] =='*'){
+        space[enemy.x+2][i] ='*' ;
+        space[enemy.x][i] = ' ' ;
+    }
+
+    }
+    enemy.x++ ;
+    }
+}
+
+if(enemy.name == "Striker" && !enemy.ltr){
+    if(enemy.x + 1 == spaceship.x && (enemy.y==spaceship.y|| enemy.y -1 == spaceship.y)){
+        std::cout<<"efjiefjeif" ;
+        spaceship.heal-- ;
+        enemy.x--;
+
+    }else{
+        enemy.x--;
+    for(int i = 0 ; i<mapInfo.size ; i++){
+        
+    if(space[enemy.x][i] =='*'){
+        space[enemy.x+2][i] ='*' ;
+        space[enemy.x][i] = ' ' ;
+    }
+
+    }
+    enemy.x++ ;
+    }
+}
+
+if(enemy.name == "Wraith" && enemy.ltr){
+    if(enemy.x + 2 == spaceship.x && (enemy.y==spaceship.y|| enemy.y +1 == spaceship.y || enemy.y +2 == spaceship.y)){
+            spaceship.heal-- ;
+            enemy.x--;
+    }else{
+    enemy.x--;
+    for(int i = 0 ; i<mapInfo.size ; i++){
+        
+    if(space[enemy.x][i] =='*'){
+        space[enemy.x+3][i] ='*' ;
+        space[enemy.x][i] = ' ' ;
+    }
+
+    }
+    enemy.x++ ;
+    }
+}
+
+if(enemy.name == "Wraith" && !enemy.ltr){
+    if(enemy.x + 2 == spaceship.x && (enemy.y==spaceship.y|| enemy.y -1 == spaceship.y || enemy.y -2 == spaceship.y)){
+            spaceship.heal-- ;
+            enemy.x--;
+    }else{
+    enemy.x--;
+    for(int i = 0 ; i<mapInfo.size ; i++){
+        
+    if(space[enemy.x][i] =='*'){
+        space[enemy.x+3][i] ='*' ;
+        space[enemy.x][i] = ' ' ;
+    }
+
+    }
+    enemy.x++ ;
+    }
+}
+
+
+if(enemy.name == "Banshee" && enemy.ltr){
+    if(enemy.x + 3 == spaceship.x && (enemy.y==spaceship.y|| enemy.y +1 == spaceship.y || enemy.y +2 == spaceship.y || enemy.y + 3 == spaceship.y)){
+        spaceship.heal-- ;
+        enemy.x--;
+    }else{
+    enemy.x--;
+    for(int i = 0 ; i<mapInfo.size ; i++){
+        
+    if(space[enemy.x][i] =='*'){
+        space[enemy.x+4][i] ='*' ;
+        space[enemy.x][i] = ' ' ;
+    }
+
+    }
+    enemy.x++ ;
+    }
+}
+
+if(enemy.name == "Banshee" && !enemy.ltr){
+    if(enemy.x + 3 == spaceship.x && (enemy.y==spaceship.y|| enemy.y -1 == spaceship.y || enemy.y -2 == spaceship.y || enemy.y - 3 == spaceship.y)){
+        spaceship.heal-- ;
+        enemy.x--;
+    }else{
+    enemy.x--;
+    for(int i = 0 ; i<mapInfo.size ; i++){
+        
+    if(space[enemy.x][i] =='*'){
+        space[enemy.x+4][i] ='*' ;
+        space[enemy.x][i] = ' ' ;
+    }
+
+    }
+    enemy.x++ ;
+    }
+}
+
+
+}
+
+

@@ -51,7 +51,7 @@ void Puase() ; //to show pause menue
 void Guidence() ; //to guide user to play
 void ExitGame() ; //to exit game
 MapInfo MapSize() ; //to take map size and point from user
-void GenerateGame() ; //to generate game
+void GenerateGame(int choice) ; //to generate game
 void RunGame(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint ,std::vector<std::vector<char>>& space) ; //to run game
 void Space (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy) ; //to give the first position to spaceships
 void Map(MapInfo mapInfo, std::vector<std::vector<char>>& space, int& heal , int& CurrentPoint) ; //to generate map
@@ -68,7 +68,7 @@ void DestroyEnemy(std::vector<std::vector<char>>& space , MapInfo& mapInfo ) ; /
 void InsertEnemy(int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy) ; // to insert enemy in map
 void Damage(Spaceship& spaceship , std::vector<std::vector<char>>& space , Enemy& enemy , MapInfo& mapInfo ) ; //to decrease our heal when the spaceships are in collision
 void SaveGame(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo) ; //to save game in a textfile
-void LoadGame(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo) ; //to load game from aa textfile
+void LoadGame(Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo) ; //to load game from aa textfile
 
 int main(){
 
@@ -91,10 +91,10 @@ std::cin>>choice ;
 switch (choice)
 {
 case 1 :
-    GenerateGame() ;
+    GenerateGame(1) ;
     break;
 case 2 :
-    //LoadGame() ;
+    GenerateGame(2) ;
     break ;
 case 3 :
     Guidence() ;
@@ -129,32 +129,142 @@ Save<<mapInfo.size<<' '<<mapInfo.point<<'\n' ;
 
 Save<<CurrentPoint<<'\n' ;
 
-// for(int i = 0 ; i<mapInfo.size ; i++){
-//     for(int j = 0 ; j<mapInfo.size ; j++){
-//         Save<<space[i][j]<<' ' ;
-//     }
-// }
 
 }
 else{
     std::cerr<<"cant open the file\n" ;
 }
 
-
+Save.close() ;
 
 }
 
 
 
 // to load game from textfile
-void LoadGame(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo){
+void LoadGame( Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo){
 
 std::ifstream Load ;
-Load.open("GameInfo.txt" , std::ios::out) ;
-std::ofstream file("GameInfo.txt");
+Load.open("GameInfo.txt" , std::ios::in) ;
+
+if(Load.is_open()){
+std::string line ;
+
+int counter = 0 ;
+int counter1 = 0 ;
+int counter2 = 0 ;
+int counter3 = 0 ;
+
+
+while(std::getline(Load , line)){
+
+counter++ ;
+
+std::stringstream cutter(line) ;
+std::string word ;
+
+switch (counter)
+{
+case 1 :
+
+
+while(cutter>>word){
+counter1++ ;
+
+switch (counter1)
+{
+case 1:
+    spaceship.heal = std::stoi(word);
+    break;
+
+case 2:
+    spaceship.x = std::stoi(word);
+    break;
+
+case 3:
+    spaceship.y = std::stoi(word);
+    break;
+default:
+    break;
+}
+    
+}
+    break;
+case 2 :
 
 
 
+while(cutter>>word){
+
+counter2++ ;
+switch (counter2)
+{
+case 1 :
+enemy.name = word ;
+    break;
+
+case 2 :
+enemy.point = std::stoi(word) ;
+    break;
+
+case 3 :
+enemy.heal = std::stoi(word) ;
+    break;
+
+case 4 :
+enemy.ltr = std::stoi(word) ;
+    break;
+
+case 5 :
+enemy.x = std::stoi(word) ;
+    break;
+
+case 6 :
+enemy.y = std::stoi(word) ;
+    break;
+
+
+}
+
+}
+    break;
+
+case 3 :
+
+while(cutter>>word){
+
+counter3++ ;
+
+switch (counter3)
+{
+case 1 :
+mapInfo.size = std::stoi(word) ;
+    break;
+case 2 :
+mapInfo.point = std::stoi(word) ;
+    break;
+
+default:
+    break;
+}
+}
+
+
+    break;
+case 4 :
+CurrentPoint = std::stoi(word);
+     break;
+}
+
+//std::ofstream file("GameInfo.txt");
+
+}
+}else{
+    std::cerr<<"can't open the file\n" ;
+}
+
+
+Load.close() ;
 }
 
 
@@ -262,26 +372,44 @@ return mapInfo ;
 
 
 // to run the game
-void GenerateGame(){
+void GenerateGame(int choice){
 
-MapInfo mapInfo = MapSize() ; //size of the map
 
 Spaceship spaceship ;
-spaceship.heal = 3 ;
 
-std::vector<std::vector<char>> space(mapInfo.size, std::vector<char>(mapInfo.size, ' ')); //to create empty spaces in map
+MapInfo mapInfo ;
 
 Enemy enemy ;
 
-int CurrentPoint ;
+int CurrentPoint = 0 ;
+if(choice == 1){
+    
+    mapInfo = MapSize() ; //size of the map
+    
+    std::vector<std::vector<char>> space(mapInfo.size, std::vector<char>(mapInfo.size, ' ')); //to create empty spaces in map
+    
+    spaceship.heal = 3 ;
+    
+    Space(mapInfo.size , space , spaceship , enemy) ;
+    
+    Map(mapInfo , space, spaceship.heal , CurrentPoint) ;
 
-SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo) ;
+    RunGame(mapInfo , spaceship , enemy , CurrentPoint , space) ;
 
-Space(mapInfo.size , space , spaceship , enemy) ;
+}
+if(choice == 2){
+    
+    LoadGame( spaceship , enemy , CurrentPoint , mapInfo) ;
+    
+    std::vector<std::vector<char>> space(mapInfo.size, std::vector<char>(mapInfo.size, ' ')); //to create empty spaces in map
+    
+    Map(mapInfo , space, spaceship.heal , CurrentPoint) ;
 
-Map(mapInfo , space, spaceship.heal , CurrentPoint) ;
+    RunGame(mapInfo , spaceship , enemy , CurrentPoint , space) ;
 
-RunGame(mapInfo , spaceship , enemy , CurrentPoint , space) ;
+}
+
+
 
 }
 

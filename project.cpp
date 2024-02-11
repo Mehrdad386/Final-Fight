@@ -71,7 +71,6 @@ void InsertEnemy(int& size , std::vector<std::vector<char>>& space ,Spaceship& s
 void Damage(Spaceship& spaceship , std::vector<std::vector<char>>& space , Enemy& enemy , MapInfo& mapInfo ) ; //to decrease our heal when the spaceships are in collision
 void SaveGame(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo) ; //to save game in a textfile
 void LoadGame(Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo) ; //to load game from aa textfile
-std::string intToString(int num) ;// to convert int to string
 int stringToInt(std::string txt) ; //to convert string to int
 
 
@@ -135,7 +134,7 @@ Save<<enemy.name<<' '<<enemy.point<<' '<<enemy.heal<<' '<<enemy.ltr<<' '<<enemy.
 
 Save<<mapInfo.size<<' '<<mapInfo.point<<'\n' ;
 
-Save<<CurrentPoint<<'\n' ;
+Save<<CurrentPoint ;
 
 
 }
@@ -260,14 +259,17 @@ default:
 
     break;
 case 4 :
+while(cutter>>word){
 CurrentPoint = stringToInt(word);
+}
      break;
 }
 
-//std::ofstream file("GameInfo.txt");
+
 
 }
 }else{
+    
     std::cerr<<"can't open the file\n" ;
 }
 
@@ -285,7 +287,7 @@ Load.close() ;
 void Puase(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint ,std::vector<std::vector<char>>& space){
     system ("CLs") ;
     std::cout<<"1- Resume game"<<'\n' ;
-    std::cout<<"2 - Save and Leave game"<<'\n' ;
+    std::cout<<"2- Save and Leave game"<<'\n' ;
     int option ;
     do{
     std::cin>>option ;
@@ -448,9 +450,11 @@ if(spaceship.heal<1){
     system("CLS") ;
     std::cout<<"you faild\n" ;
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    std::ofstream("GameInfo.txt") ;
     SatrtMenue() ;
 }
 else{
+    
     system("CLS") ;
     std::cout<<"you won\n" ;
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
@@ -458,9 +462,14 @@ else{
     int YN ;
     std::cin>>YN ;
     if(YN== 1){
-         //LoadGame() ;
+    
+    std::cout<<"enter a new total point  : " ;   
+    std::cin>>mapInfo.point ;
+    SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo) ;
+    GenerateGame(2) ;
     }
     else if(YN==0){
+         std::ofstream("GameInfo.txt") ;
          SatrtMenue() ;
 }
 }
@@ -577,6 +586,7 @@ if(mapInfo.size>=15){
 std::cout<<"your heal : "<<heal<<'\t' ;
 std::cout<<"size of the map : "<<mapInfo.size<<" x "<<mapInfo.size<<'\t' ;
 std::cout<<"your current point : "<<CurrentPoint<<'\t' ;
+std::cout<<"the total point : "<<mapInfo.point<<'\t' ;
 std::cout<<"pause(enter p)"<<'\n' ;
 
 
@@ -1063,21 +1073,6 @@ if(enemy.name == "Banshee" && !enemy.ltr){
 
 
 
-std::string intToString(int num) {
-    if (num == 0)
-        return "0";
-        
-    std::string str = "";
-    
-    while (num != 0) {
-        int digit = num % 10;
-        char c = '0' + digit;
-        str = c + str;
-        num /= 10;
-    }
-    
-    return str;
-}
 
 
 

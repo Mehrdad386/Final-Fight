@@ -61,26 +61,26 @@ void ExitGame() ; //to exit game
 MapInfo MapSize() ; //to take map size and point from user
 void GenerateGame(int choice) ; //to generate game
 void RunGame(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint ,std::vector<std::vector<char>>& space , std::vector<Bullet>& bullet) ; //to run game
-void Space (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy) ; //to give the first position to spaceships
-void LoadSpace (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy) ; //to load information on map
+void Space (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy , std::vector<Bullet>& bullet) ; //to give the first position to spaceships
+void LoadSpace (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy, std::vector<Bullet>& bullet) ; //to load information on map
 void Map(MapInfo mapInfo, std::vector<std::vector<char>>& space, int& heal , int& CurrentPoint) ; //to generate map
 void RandomEnemy(int& y , int& size) ; //to give random place to enemy
-void Dart(int& size, std::vector<std::vector<char>>& space , Enemy& enemy) ; //to make Dart spaceship and return its y
-void Striker(int& size, std::vector<std::vector<char>>& space, Enemy& enemy) ; //to make Striker spaceship and return its y
-void Wraith(int& size, std::vector<std::vector<char>>& space, Enemy& enemy) ; //to make Wraith spaceship and return its y
-void Banshee(int& size, std::vector<std::vector<char>>& space, Enemy& enemy) ; //to make Banshee spaceship and return its y
+void Dart(int& size, std::vector<std::vector<char>>& space , Enemy& enemy, std::vector<Bullet>& bullet) ; //to make Dart spaceship and return its y
+void Striker(int& size, std::vector<std::vector<char>>& space, Enemy& enemy, std::vector<Bullet>& bullet) ; //to make Striker spaceship and return its y
+void Wraith(int& size, std::vector<std::vector<char>>& space, Enemy& enemy, std::vector<Bullet>& bullet) ; //to make Wraith spaceship and return its y
+void Banshee(int& size, std::vector<std::vector<char>>& space, Enemy& enemy, std::vector<Bullet>& bullet) ; //to make Banshee spaceship and return its y
 void Mover(Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , int& CurrentPoint ,  std::vector<Bullet>& bullet) ; //to move spaceships
-void MoveEnemy (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo) ; //to move enemy
+void MoveEnemy (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , std::vector<Bullet>& bullet) ; //to move enemy
 void Attack (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , int& CurrentPoint ,  std::vector<Bullet>& bullet) ; //to do attack action
 void Right (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo, int& CurrentPoint,  std::vector<Bullet>& bullet) ; //to do right action
 void Left (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo, int& CurrentPoint,  std::vector<Bullet>& bullet) ; //to dp left action
 void DestroyEnemy(std::vector<std::vector<char>>& space , MapInfo& mapInfo ) ; // to destroy enemy
-void InsertEnemy(int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy) ; // to insert enemy in map
+void InsertEnemy(int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy , std::vector<Bullet>& bullet) ; // to insert enemy in map
 void Damage(Spaceship& spaceship , std::vector<std::vector<char>>& space , Enemy& enemy , MapInfo& mapInfo ) ; //to decrease our heal when the spaceships are in collision
-void SaveGame(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo) ; //to save game in a textfile
-void LoadGame(Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo) ; //to load game from aa textfile
+void SaveGame(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo, std::vector<Bullet>& bullet) ; //to save game in a textfile
+void LoadGame(Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo, std::vector<Bullet>& bullet) ; //to load game from aa textfile
 int stringToInt(std::string txt) ; //to convert string to int
-void Win(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo) ; //to show win popup
+void Win(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo, std::vector<Bullet>& bullet) ; //to show win popup
 void Lose() ; //to show lose popup
 
 
@@ -129,7 +129,7 @@ std::cout<<"invalid choice"<<'\n' ;
 
 
 //to save game in a text file
-void SaveGame(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo){
+void SaveGame(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo, std::vector<Bullet>& bullet){
 
 std::ofstream Save ;
 
@@ -142,7 +142,23 @@ Save<<enemy.name<<' '<<enemy.point<<' '<<enemy.heal<<' '<<enemy.ltr<<' '<<enemy.
 
 Save<<mapInfo.size<<' '<<mapInfo.point<<'\n' ;
 
-Save<<CurrentPoint ;
+Save<<CurrentPoint<<'\n' ;
+
+for(int i = 0 ; i<bullet.size() ; i++){
+
+Save<<bullet[i].x<<' '<<bullet[i].y<<'\n';
+
+}
+
+
+
+
+
+
+
+
+
+
 
 
 }
@@ -157,7 +173,7 @@ Save.close() ;
 
 
 // to load game from textfile
-void LoadGame( Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo){
+void LoadGame( Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo, std::vector<Bullet>& bullet){
 
 std::ifstream Load ;
 Load.open("GameInfo.txt" , std::ios::in) ;
@@ -169,6 +185,8 @@ int counter = 0 ;
 int counter1 = 0 ;
 int counter2 = 0 ;
 int counter3 = 0 ;
+int counter4 = 0 ;
+Bullet temp ;
 
 
 while(std::getline(Load , line)){
@@ -267,15 +285,43 @@ default:
 
     break;
 case 4 :
-while(cutter>>word){
-CurrentPoint = stringToInt(word);
+while (cutter>>word)
+{
+    CurrentPoint = stringToInt(word) ;
 }
+
      break;
+
+     
+default :
+
+counter4 = 0 ;
+
+while(cutter>>word){
+counter4++ ;
+if(counter4 == 1){
+
+temp.x = stringToInt(word) ;
+
+}
+
+if(counter4 == 2){
+
+temp.y = stringToInt(word) ;
+
+}
+
+}
+
+bullet.push_back(temp) ;
+
+    break;
+
+}
+
 }
 
 
-
-}
 }else{
     
     std::cerr<<"can't open the file\n" ;
@@ -306,7 +352,7 @@ void Puase(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& Current
     RunGame(mapInfo , spaceship , enemy , CurrentPoint , space , bullet) ;
         break;
     case 2 :
-    SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo) ;
+    SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo , bullet) ;
     SatrtMenue() ;
         break;
     default:
@@ -418,7 +464,7 @@ if(choice == 1){
 
     CurrentPoint = 0 ;
     
-    Space(mapInfo.size , space , spaceship , enemy) ;
+    Space(mapInfo.size , space , spaceship , enemy , bullet) ;
     
     Map(mapInfo , space, spaceship.heal , CurrentPoint) ;
 
@@ -427,11 +473,11 @@ if(choice == 1){
 }
 if(choice == 2){
     
-    LoadGame( spaceship , enemy , CurrentPoint , mapInfo) ;
+    LoadGame( spaceship , enemy , CurrentPoint , mapInfo , bullet) ;
     
     std::vector<std::vector<char>> space(mapInfo.size, std::vector<char>(mapInfo.size, ' ')); //to create empty spaces in map
 
-    LoadSpace( mapInfo.size , space ,spaceship , enemy) ;
+    LoadSpace( mapInfo.size , space ,spaceship , enemy , bullet) ;
     
     Map(mapInfo , space, spaceship.heal , CurrentPoint) ;
 
@@ -457,8 +503,8 @@ Mover(spaceship , enemy , space , mapInfo , CurrentPoint , bullet) ;
 if(enemy.heal == 0){
     CurrentPoint += enemy.point ;
     DestroyEnemy(space , mapInfo) ;
-    InsertEnemy(mapInfo.size , space , spaceship , enemy) ;
-    SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo) ;
+    InsertEnemy(mapInfo.size , space , spaceship , enemy , bullet) ;
+    SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo , bullet) ;
     Map(mapInfo , space, spaceship.heal , CurrentPoint);
 
 }
@@ -472,7 +518,7 @@ Lose() ;
 
 
 else{   
-Win(space , spaceship ,  enemy , CurrentPoint , mapInfo) ;
+Win(space , spaceship ,  enemy , CurrentPoint , mapInfo , bullet) ;
 }
 }
 
@@ -482,19 +528,19 @@ Win(space , spaceship ,  enemy , CurrentPoint , mapInfo) ;
 
 
 //to give the first position to the spaceships
-void Space (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy){
+void Space (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy , std::vector<Bullet>& bullet){
 
 spaceship.x = size -1 ;
 spaceship.y = static_cast<int>(size/2) -1 ;
 space[spaceship.x][spaceship.y] = '#';
-InsertEnemy(size , space , spaceship , enemy) ;
+InsertEnemy(size , space , spaceship , enemy , bullet) ;
 
 }
 
 
 
 //to give loaded value to space
-void LoadSpace (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy){
+void LoadSpace (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy , std::vector<Bullet>& bullet){
 
 
 
@@ -502,23 +548,29 @@ space[spaceship.x][spaceship.y] = '#' ;
 
 if(enemy.name == "Dart"){
     
-    Dart(size , space , enemy) ;
+    Dart(size , space , enemy , bullet) ;
 }
 
 if(enemy.name == "Striker"){
 
-     Striker(size , space , enemy) ;
+     Striker(size , space , enemy, bullet) ;
 }
 
 if(enemy.name == "Wraith"){
 
-    Wraith(size , space , enemy) ;
+    Wraith(size , space , enemy , bullet) ;
 }
 
 if(enemy.name == "Banshee"){
 
 
-     Banshee(size , space , enemy) ;
+     Banshee(size , space , enemy , bullet) ;
+
+}
+
+for(int i = 0 ; i<bullet.size() ; i++){
+
+ space[bullet[i].x][bullet[i].y] = '^' ;
 
 }
 
@@ -533,7 +585,7 @@ if(enemy.name == "Banshee"){
 
 
 //to create enemy
-void InsertEnemy(int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy){
+void InsertEnemy(int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy , std::vector<Bullet>& bullet){
 RandomEnemy(enemy.y , size) ;
 srand(time(0)) ;
 int RandomEnemy = rand()%4;
@@ -543,28 +595,28 @@ case 0 :
    enemy.name = "Dart" ;
    enemy.point = 2 ;
    enemy.x = 0 ;
-   Dart(size , space , enemy) ;
+   Dart(size , space , enemy , bullet) ;
    enemy.heal = 1 ;
     break;
 case 1 :
     enemy.name = "Striker" ;
     enemy.point = 8 ;
     enemy.x = 0 ;
-    Striker(size , space , enemy) ;
+    Striker(size , space , enemy , bullet) ;
     enemy.heal = 2 ;
     break;
 case 2 :
     enemy.name = "Wraith" ;
     enemy.point = 18 ;
     enemy.x = 0 ;
-    Wraith(size , space , enemy) ;
+    Wraith(size , space , enemy , bullet) ;
     enemy.heal = 4 ;
     break;
 case 3 :
     enemy.name = "Banshee" ;
     enemy.point = 32 ;
     enemy.x = 0 ;
-    Banshee(size , space , enemy) ;
+    Banshee(size , space , enemy , bullet) ;
     enemy.heal = 6 ;
     break;
 
@@ -631,7 +683,21 @@ y = rand()%size ;
 
 
 //to make Dart spaceship and return its position
-void Dart(int& size, std::vector<std::vector<char>>& space, Enemy& enemy ){
+void Dart(int& size, std::vector<std::vector<char>>& space, Enemy& enemy , std::vector<Bullet>& bullet ){
+if(space[enemy.x][enemy.y] == '^'){
+
+    enemy.heal-- ;
+    for(int i = 0 ; i<bullet.size() ; i++){
+        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+
+               bullet.erase(bullet.begin() + i) ;
+               i-- ;
+
+        }
+    }
+    
+
+}
 
 space[enemy.x][enemy.y] = '*' ;
 enemy.ltr = true ;
@@ -643,11 +709,29 @@ enemy.ltr = true ;
 
 
 //to make Striker spaceship and return its position
-void Striker(int& size, std::vector<std::vector<char>>& space, Enemy& enemy){
+void Striker(int& size, std::vector<std::vector<char>>& space, Enemy& enemy , std::vector<Bullet>& bullet){
 
 
 
 if(enemy.y==size-1){
+
+if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'){
+
+    enemy.heal-- ;
+    for(int i = 0 ; i<bullet.size() ; i++){
+        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+
+               bullet.erase(bullet.begin() + i) ;
+               i-- ;
+
+        }
+    }
+    
+
+}
+
+
+
 space[enemy.x][enemy.y] = '*' ;
 space[enemy.x][enemy.y-1] = '*' ;
 space[enemy.x + 1][enemy.y] = '*' ;
@@ -655,6 +739,26 @@ space[enemy.x + 1][enemy.y-1] = '*' ;
 enemy.ltr = false ;
 }
 else{
+
+
+if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'){
+
+    enemy.heal-- ;
+    for(int i = 0 ; i<bullet.size() ; i++){
+        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+
+               bullet.erase(bullet.begin() + i) ;
+               i-- ;
+
+        }
+    }
+    
+
+}
+
+
+
+
 space[enemy.x][enemy.y] = '*' ;
 space[enemy.x][enemy.y+1] = '*' ;
 space[enemy.x + 1][enemy.y] = '*' ;
@@ -669,11 +773,31 @@ enemy.ltr = true ;
 
 
 //to make Wraith spaceship and return its position
-void Wraith(int& size, std::vector<std::vector<char>>& space, Enemy& enemy){
+void Wraith(int& size, std::vector<std::vector<char>>& space, Enemy& enemy, std::vector<Bullet>& bullet){
 
 
 
 if(enemy.y==size-1 || enemy.y==size-2){
+
+
+
+if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'){
+
+    enemy.heal-- ;
+    for(int i = 0 ; i<bullet.size() ; i++){
+        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+
+               bullet.erase(bullet.begin() + i) ;
+               i-- ;
+
+        }
+    }
+    
+
+}
+
+
+
 space[enemy.x][enemy.y] = '*' ;
 space[enemy.x][enemy.y-1] = '*' ;
 space[enemy.x][enemy.y-2] = '*' ;
@@ -686,6 +810,27 @@ space[enemy.x + 2][enemy.y-2] = '*' ;
 enemy.ltr = false ;
 }
 else{
+
+
+
+
+if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'){
+
+    enemy.heal-- ;
+    for(int i = 0 ; i<bullet.size() ; i++){
+        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+
+               bullet.erase(bullet.begin() + i) ;
+               i-- ;
+
+        }
+    }
+    
+
+}
+
+
+
 space[enemy.x][enemy.y] = '*' ;
 space[enemy.x][enemy.y+1] = '*' ;
 space[enemy.x][enemy.y+2] = '*' ;
@@ -703,11 +848,35 @@ enemy.ltr = true ;
 }
 
 //to make Banshee spaceship and return its position
-void Banshee(int& size, std::vector<std::vector<char>>& space, Enemy& enemy){
+void Banshee(int& size, std::vector<std::vector<char>>& space, Enemy& enemy, std::vector<Bullet>& bullet){
+
+
 
 
 
 if(enemy.y==size-1 || enemy.y==size-2 || enemy.y==size-3){
+
+
+
+
+if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' ||space[enemy.x+3][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'||space[enemy.x+3][enemy.y-2] == '^' || space[enemy.x][enemy.y-3] == '^' ||space[enemy.x+1][enemy.y-3] == '^'||space[enemy.x+2][enemy.y-3] == '^' ||space[enemy.x+3][enemy.y-3] ){
+
+    enemy.heal-- ;
+    for(int i = 0 ; i<bullet.size() ; i++){
+        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+
+               bullet.erase(bullet.begin() + i) ;
+               i-- ;
+
+        }
+    }
+    
+
+}
+
+
+
+
 space[enemy.x][enemy.y] = '*' ;
 space[enemy.x][enemy.y-1] = '*' ;
 space[enemy.x][enemy.y-2] = '*' ;
@@ -727,6 +896,28 @@ space[enemy.x + 3][enemy.y-3] = '*' ;
 enemy.ltr = false ;
 }
 else{
+
+
+
+if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' ||space[enemy.x+3][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'||space[enemy.x+3][enemy.y+2] == '^' || space[enemy.x][enemy.y+3] == '^' ||space[enemy.x+1][enemy.y+3] == '^'||space[enemy.x+2][enemy.y+3] == '^' ||space[enemy.x+3][enemy.y+3] ){
+
+    enemy.heal-- ;
+    for(int i = 0 ; i<bullet.size() ; i++){
+        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+
+               bullet.erase(bullet.begin() + i) ;
+               i-- ;
+
+        }
+    }
+    
+
+}
+
+
+
+
+
 space[enemy.x][enemy.y] = '*' ;
 space[enemy.x][enemy.y+1] = '*' ;
 space[enemy.x][enemy.y+2] = '*' ;
@@ -780,7 +971,7 @@ default:
 
 
 //to move enemy
-void MoveEnemy (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo){
+void MoveEnemy (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , std::vector<Bullet>& bullet){
 
 
 if(enemy.name == "Dart"){
@@ -794,7 +985,7 @@ if(enemy.name == "Dart"){
     }
     else if (enemy.x == mapInfo.size-1){
         DestroyEnemy(space , mapInfo) ;
-        InsertEnemy(mapInfo.size , space , spaceship , enemy) ;
+        InsertEnemy(mapInfo.size , space , spaceship , enemy , bullet) ;
 
     }
 }
@@ -818,7 +1009,7 @@ if(enemy.name =="Striker"){
     }
         else if (enemy.x == mapInfo.size-2){
         DestroyEnemy(space , mapInfo) ;
-        InsertEnemy(mapInfo.size , space , spaceship , enemy) ;
+        InsertEnemy(mapInfo.size , space , spaceship , enemy , bullet) ;
         //Map(mapInfo , space, spaceship.heal , CurrentPoint);
     }
 
@@ -843,7 +1034,7 @@ if(enemy.name =="Wraith"){
     }
         else if (enemy.x == mapInfo.size-3){
         DestroyEnemy(space , mapInfo) ;
-        InsertEnemy(mapInfo.size , space , spaceship , enemy) ;
+        InsertEnemy(mapInfo.size , space , spaceship , enemy , bullet) ;
         //Map(mapInfo , space, spaceship.heal , CurrentPoint);
     }
 }
@@ -867,7 +1058,7 @@ if(enemy.name =="Banshee"){
     }
         else if (enemy.x == mapInfo.size-4){
         DestroyEnemy(space , mapInfo) ;
-        InsertEnemy(mapInfo.size , space , spaceship , enemy) ;
+        InsertEnemy(mapInfo.size , space , spaceship , enemy , bullet) ;
         //Map(mapInfo , space, spaceship.heal , CurrentPoint);
     }
 }
@@ -876,7 +1067,7 @@ if(enemy.name =="Banshee"){
 }
 
 //to do attack action
-void Attack (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , int& CurrentPoint ,  std::vector<Bullet>& bullet){
+void Attack (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>& space , MapInfo& mapInfo , int& CurrentPoint , std::vector<Bullet>& bullet){
 
 // for(int i = 1; i<mapInfo.size ; i++){
 //         if(space[spaceship.x-i][spaceship.y]==' '){
@@ -958,7 +1149,7 @@ else{
 
 
 
-MoveEnemy(spaceship , enemy , space , mapInfo) ;
+MoveEnemy(spaceship , enemy , space , mapInfo , bullet) ;
 Map(mapInfo, space, spaceship.heal , CurrentPoint) ;
 
 
@@ -1162,7 +1353,7 @@ int stringToInt(std::string txt){
 
 
 //to show win popup
-void Win(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo){
+void Win(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint , MapInfo& mapInfo, std::vector<Bullet>& bullet){
 
     
 system("CLS") ;
@@ -1176,7 +1367,7 @@ if(YN== 1){
     
 std::cout<<"enter a new total point  : " ;   
 std::cin>>mapInfo.point ;
-SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo) ;
+SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo , bullet) ;
 GenerateGame(2) ;
 }
 else if(YN==0){

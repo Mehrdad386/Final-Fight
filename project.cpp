@@ -63,7 +63,7 @@ void GenerateGame(int choice) ; //to generate game
 void RunGame(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint ,std::vector<std::vector<char>>& space , std::vector<Bullet>& bullet) ; //to run game
 void Space (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy , std::vector<Bullet>& bullet) ; //to give the first position to spaceships
 void LoadSpace (int& size , std::vector<std::vector<char>>& space ,Spaceship& spaceship ,Enemy& enemy, std::vector<Bullet>& bullet) ; //to load information on map
-void Map(MapInfo mapInfo, std::vector<std::vector<char>>& space, int& heal , int& CurrentPoint) ; //to generate map
+void Map(MapInfo mapInfo, std::vector<std::vector<char>>& space, int& heal , int& CurrentPoint , Enemy enemy) ; //to generate map
 void RandomEnemy(int& y , int& size) ; //to give random place to enemy
 void Dart(int& size, std::vector<std::vector<char>>& space , Enemy& enemy, std::vector<Bullet>& bullet) ; //to make Dart spaceship and return its y
 void Striker(int& size, std::vector<std::vector<char>>& space, Enemy& enemy, std::vector<Bullet>& bullet) ; //to make Striker spaceship and return its y
@@ -348,7 +348,7 @@ void Puase(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& Current
     switch (option)
     {
     case 1 :
-    Map(mapInfo , space, spaceship.heal , CurrentPoint);
+    Map(mapInfo , space, spaceship.heal , CurrentPoint , enemy);
     RunGame(mapInfo , spaceship , enemy , CurrentPoint , space , bullet) ;
         break;
     case 2 :
@@ -466,7 +466,7 @@ if(choice == 1){
     
     Space(mapInfo.size , space , spaceship , enemy , bullet) ;
     
-    Map(mapInfo , space, spaceship.heal , CurrentPoint) ;
+    Map(mapInfo , space, spaceship.heal , CurrentPoint , enemy) ;
 
     RunGame(mapInfo , spaceship , enemy , CurrentPoint , space , bullet) ;
 
@@ -479,7 +479,7 @@ if(choice == 2){
 
     LoadSpace( mapInfo.size , space ,spaceship , enemy , bullet) ;
     
-    Map(mapInfo , space, spaceship.heal , CurrentPoint) ;
+    Map(mapInfo , space, spaceship.heal , CurrentPoint , enemy) ;
 
     RunGame(mapInfo , spaceship , enemy , CurrentPoint , space , bullet) ;
 
@@ -505,7 +505,7 @@ if(enemy.heal == 0){
     DestroyEnemy(space , mapInfo) ;
     InsertEnemy(mapInfo.size , space , spaceship , enemy , bullet) ;
     SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo , bullet) ;
-    Map(mapInfo , space, spaceship.heal , CurrentPoint);
+    Map(mapInfo , space, spaceship.heal , CurrentPoint , enemy);
 
 }
 }
@@ -632,15 +632,28 @@ case 3 :
 
 
 // to make map
-void Map(MapInfo mapInfo , std::vector<std::vector<char>>& space, int& heal , int& CurrentPoint){
+void Map(MapInfo mapInfo , std::vector<std::vector<char>>& space, int& heal , int& CurrentPoint , Enemy enemy){
 
 system ("CLS"); //to clear the screen
 
 if(mapInfo.size>=15){
-std::cout<<"your heal : "<<heal<<'\t' ;
-std::cout<<"size of the map : "<<mapInfo.size<<" x "<<mapInfo.size<<'\t' ;
-std::cout<<"your current point : "<<CurrentPoint<<'\t' ;
-std::cout<<"the total point : "<<mapInfo.point<<'\t' ;
+std::cout<<"your heal : ";
+for(int i = 0 ; i<heal ; i++){
+
+std::cout<<'#' ;
+
+}
+std::cout<<" | " ;
+std::cout<<"the enemy's heal : " ;
+for(int i =0 ; i<enemy.heal ; i++){
+
+    std::cout<<'*' ;
+
+}
+std::cout<<" | " ;
+std::cout<<"size of the map : "<<mapInfo.size<<" x "<<mapInfo.size<<" | " ;
+std::cout<<"your current point : "<<CurrentPoint<<" | " ;
+std::cout<<"the total point : "<<mapInfo.point<<" | " ;
 std::cout<<"pause(enter p)"<<'\n' ;
 
 
@@ -687,14 +700,14 @@ void Dart(int& size, std::vector<std::vector<char>>& space, Enemy& enemy , std::
 if(space[enemy.x][enemy.y] == '^'){
 
     enemy.heal-- ;
-    for(int i = 0 ; i<bullet.size() ; i++){
-        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+    // for(int i = 0 ; i<bullet.size() ; i++){
+    //     if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-               bullet.erase(bullet.begin() + i) ;
-               i-- ;
+    //            bullet.erase(bullet.begin() + i) ;
+    //            i-- ;
 
-        }
-    }
+    //     }
+    // }
     
 
 }
@@ -715,20 +728,20 @@ void Striker(int& size, std::vector<std::vector<char>>& space, Enemy& enemy , st
 
 if(enemy.y==size-1){
 
-if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'){
+// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'){
 
-    enemy.heal-- ;
-    for(int i = 0 ; i<bullet.size() ; i++){
-        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+//     enemy.heal-- ;
+//     for(int i = 0 ; i<bullet.size() ; i++){
+//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-               bullet.erase(bullet.begin() + i) ;
-               i-- ;
+//                bullet.erase(bullet.begin() + i) ;
+//                i-- ;
 
-        }
-    }
+//         }
+//     }
     
 
-}
+// }
 
 
 
@@ -741,20 +754,20 @@ enemy.ltr = false ;
 else{
 
 
-if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'){
+// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'){
 
-    enemy.heal-- ;
-    for(int i = 0 ; i<bullet.size() ; i++){
-        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+//     enemy.heal-- ;
+//     for(int i = 0 ; i<bullet.size() ; i++){
+//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-               bullet.erase(bullet.begin() + i) ;
-               i-- ;
+//                bullet.erase(bullet.begin() + i) ;
+//                i-- ;
 
-        }
-    }
+//         }
+//     }
     
 
-}
+// }
 
 
 
@@ -781,20 +794,20 @@ if(enemy.y==size-1 || enemy.y==size-2){
 
 
 
-if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'){
+// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'){
 
-    enemy.heal-- ;
-    for(int i = 0 ; i<bullet.size() ; i++){
-        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+//     enemy.heal-- ;
+//     for(int i = 0 ; i<bullet.size() ; i++){
+//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-               bullet.erase(bullet.begin() + i) ;
-               i-- ;
+//                bullet.erase(bullet.begin() + i) ;
+//                i-- ;
 
-        }
-    }
+//         }
+//     }
     
 
-}
+// }
 
 
 
@@ -814,20 +827,20 @@ else{
 
 
 
-if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'){
+// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'){
 
-    enemy.heal-- ;
-    for(int i = 0 ; i<bullet.size() ; i++){
-        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+//     enemy.heal-- ;
+//     for(int i = 0 ; i<bullet.size() ; i++){
+//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-               bullet.erase(bullet.begin() + i) ;
-               i-- ;
+//                bullet.erase(bullet.begin() + i) ;
+//                i-- ;
 
-        }
-    }
+//         }
+//     }
     
 
-}
+// }
 
 
 
@@ -859,20 +872,20 @@ if(enemy.y==size-1 || enemy.y==size-2 || enemy.y==size-3){
 
 
 
-if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' ||space[enemy.x+3][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'||space[enemy.x+3][enemy.y-2] == '^' || space[enemy.x][enemy.y-3] == '^' ||space[enemy.x+1][enemy.y-3] == '^'||space[enemy.x+2][enemy.y-3] == '^' ||space[enemy.x+3][enemy.y-3] ){
+// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' ||space[enemy.x+3][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'||space[enemy.x+3][enemy.y-2] == '^' || space[enemy.x][enemy.y-3] == '^' ||space[enemy.x+1][enemy.y-3] == '^'||space[enemy.x+2][enemy.y-3] == '^' ||space[enemy.x+3][enemy.y-3] ){
 
-    enemy.heal-- ;
-    for(int i = 0 ; i<bullet.size() ; i++){
-        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+//     enemy.heal-- ;
+//     for(int i = 0 ; i<bullet.size() ; i++){
+//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-               bullet.erase(bullet.begin() + i) ;
-               i-- ;
+//                bullet.erase(bullet.begin() + i) ;
+//                i-- ;
 
-        }
-    }
+//         }
+//     }
     
 
-}
+// }
 
 
 
@@ -899,20 +912,20 @@ else{
 
 
 
-if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' ||space[enemy.x+3][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'||space[enemy.x+3][enemy.y+2] == '^' || space[enemy.x][enemy.y+3] == '^' ||space[enemy.x+1][enemy.y+3] == '^'||space[enemy.x+2][enemy.y+3] == '^' ||space[enemy.x+3][enemy.y+3] ){
+// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' ||space[enemy.x+3][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'||space[enemy.x+3][enemy.y+2] == '^' || space[enemy.x][enemy.y+3] == '^' ||space[enemy.x+1][enemy.y+3] == '^'||space[enemy.x+2][enemy.y+3] == '^' ||space[enemy.x+3][enemy.y+3] ){
 
-    enemy.heal-- ;
-    for(int i = 0 ; i<bullet.size() ; i++){
-        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+//     enemy.heal-- ;
+//     for(int i = 0 ; i<bullet.size() ; i++){
+//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-               bullet.erase(bullet.begin() + i) ;
-               i-- ;
+//                bullet.erase(bullet.begin() + i) ;
+//                i-- ;
 
-        }
-    }
+//         }
+//     }
     
 
-}
+// }
 
 
 
@@ -1150,7 +1163,7 @@ else{
 
 
 MoveEnemy(spaceship , enemy , space , mapInfo , bullet) ;
-Map(mapInfo, space, spaceship.heal , CurrentPoint) ;
+Map(mapInfo, space, spaceship.heal , CurrentPoint , enemy) ;
 
 
 

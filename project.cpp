@@ -496,10 +496,13 @@ void RunGame(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& Curre
 
 
 while(CurrentPoint<mapInfo.point){
+   
     if(spaceship.heal <1){
         break;
     }
+
 Mover(spaceship , enemy , space , mapInfo , CurrentPoint , bullet) ;
+
 if(enemy.heal == 0){
     CurrentPoint += enemy.point ;
     DestroyEnemy(space , mapInfo) ;
@@ -700,14 +703,14 @@ void Dart(int& size, std::vector<std::vector<char>>& space, Enemy& enemy , std::
 if(space[enemy.x][enemy.y] == '^'){
 
     enemy.heal-- ;
-    // for(int i = 0 ; i<bullet.size() ; i++){
-    //     if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+    for(int i = 0 ; i<bullet.size() ; i++){
+        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-    //            bullet.erase(bullet.begin() + i) ;
-    //            i-- ;
+               bullet.erase(bullet.begin() + i) ;
+               i-- ;
 
-    //     }
-    // }
+        }
+    }
     
 
 }
@@ -728,20 +731,20 @@ void Striker(int& size, std::vector<std::vector<char>>& space, Enemy& enemy , st
 
 if(enemy.y==size-1){
 
-// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'){
+if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'){
 
-//     enemy.heal-- ;
-//     for(int i = 0 ; i<bullet.size() ; i++){
-//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+    enemy.heal-- ;
+    for(int i = 0 ; i<bullet.size() ; i++){
+        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-//                bullet.erase(bullet.begin() + i) ;
-//                i-- ;
+               bullet.erase(bullet.begin() + i) ;
+               i-- ;
 
-//         }
-//     }
+        }
+    }
     
 
-// }
+}
 
 
 
@@ -754,20 +757,20 @@ enemy.ltr = false ;
 else{
 
 
-// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'){
+if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'){
 
-//     enemy.heal-- ;
-//     for(int i = 0 ; i<bullet.size() ; i++){
-//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+    enemy.heal-- ;
+    for(int i = 0 ; i<bullet.size() ; i++){
+        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-//                bullet.erase(bullet.begin() + i) ;
-//                i-- ;
+               bullet.erase(bullet.begin() + i) ;
+               i-- ;
 
-//         }
-//     }
+        }
+    }
     
 
-// }
+}
 
 
 
@@ -794,20 +797,20 @@ if(enemy.y==size-1 || enemy.y==size-2){
 
 
 
-// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'){
+if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'){
 
-//     enemy.heal-- ;
-//     for(int i = 0 ; i<bullet.size() ; i++){
-//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+    enemy.heal-- ;
+    for(int i = 0 ; i<bullet.size() ; i++){
+        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-//                bullet.erase(bullet.begin() + i) ;
-//                i-- ;
+               bullet.erase(bullet.begin() + i) ;
+               i-- ;
 
-//         }
-//     }
+        }
+    }
     
 
-// }
+}
 
 
 
@@ -827,20 +830,20 @@ else{
 
 
 
-// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'){
+if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'){
 
-//     enemy.heal-- ;
-//     for(int i = 0 ; i<bullet.size() ; i++){
-//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+    enemy.heal-- ;
+    for(int i = 0 ; i<bullet.size() ; i++){
+        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-//                bullet.erase(bullet.begin() + i) ;
-//                i-- ;
+               bullet.erase(bullet.begin() + i) ;
+               i-- ;
 
-//         }
-//     }
+        }
+    }
     
 
-// }
+}
 
 
 
@@ -872,20 +875,20 @@ if(enemy.y==size-1 || enemy.y==size-2 || enemy.y==size-3){
 
 
 
-// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' ||space[enemy.x+3][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'||space[enemy.x+3][enemy.y-2] == '^' || space[enemy.x][enemy.y-3] == '^' ||space[enemy.x+1][enemy.y-3] == '^'||space[enemy.x+2][enemy.y-3] == '^' ||space[enemy.x+3][enemy.y-3] ){
+if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' ||space[enemy.x+3][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'||space[enemy.x+3][enemy.y-2] == '^' || space[enemy.x][enemy.y-3] == '^' ||space[enemy.x+1][enemy.y-3] == '^'||space[enemy.x+2][enemy.y-3] == '^' ||space[enemy.x+3][enemy.y-3] ){
 
-//     enemy.heal-- ;
-//     for(int i = 0 ; i<bullet.size() ; i++){
-//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+    enemy.heal-- ;
+    for(int i = 0 ; i<bullet.size() ; i++){
+        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-//                bullet.erase(bullet.begin() + i) ;
-//                i-- ;
+               bullet.erase(bullet.begin() + i) ;
+               i-- ;
 
-//         }
-//     }
+        }
+    }
     
 
-// }
+}
 
 
 
@@ -912,20 +915,20 @@ else{
 
 
 
-// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' ||space[enemy.x+3][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'||space[enemy.x+3][enemy.y+2] == '^' || space[enemy.x][enemy.y+3] == '^' ||space[enemy.x+1][enemy.y+3] == '^'||space[enemy.x+2][enemy.y+3] == '^' ||space[enemy.x+3][enemy.y+3] ){
+if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' ||space[enemy.x+3][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'||space[enemy.x+3][enemy.y+2] == '^' || space[enemy.x][enemy.y+3] == '^' ||space[enemy.x+1][enemy.y+3] == '^'||space[enemy.x+2][enemy.y+3] == '^' ||space[enemy.x+3][enemy.y+3] ){
 
-//     enemy.heal-- ;
-//     for(int i = 0 ; i<bullet.size() ; i++){
-//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+    enemy.heal-- ;
+    for(int i = 0 ; i<bullet.size() ; i++){
+        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-//                bullet.erase(bullet.begin() + i) ;
-//                i-- ;
+               bullet.erase(bullet.begin() + i) ;
+               i-- ;
 
-//         }
-//     }
+        }
+    }
     
 
-// }
+}
 
 
 
@@ -997,6 +1000,7 @@ if(enemy.name == "Dart"){
         Damage(spaceship , space , enemy , mapInfo ) ;
     }
     else if (enemy.x == mapInfo.size-1){
+        spaceship.heal-- ;
         DestroyEnemy(space , mapInfo) ;
         InsertEnemy(mapInfo.size , space , spaceship , enemy , bullet) ;
 
@@ -1021,9 +1025,10 @@ if(enemy.name =="Striker"){
         Damage(spaceship , space , enemy , mapInfo ) ;
     }
         else if (enemy.x == mapInfo.size-2){
+        spaceship.heal-- ;
         DestroyEnemy(space , mapInfo) ;
         InsertEnemy(mapInfo.size , space , spaceship , enemy , bullet) ;
-        //Map(mapInfo , space, spaceship.heal , CurrentPoint);
+
     }
 
 }
@@ -1046,6 +1051,7 @@ if(enemy.name =="Wraith"){
         Damage(spaceship , space , enemy , mapInfo ) ;
     }
         else if (enemy.x == mapInfo.size-3){
+        spaceship.heal-- ;
         DestroyEnemy(space , mapInfo) ;
         InsertEnemy(mapInfo.size , space , spaceship , enemy , bullet) ;
         //Map(mapInfo , space, spaceship.heal , CurrentPoint);
@@ -1070,6 +1076,7 @@ if(enemy.name =="Banshee"){
         Damage(spaceship , space , enemy , mapInfo ) ;
     }
         else if (enemy.x == mapInfo.size-4){
+        spaceship.heal-- ;
         DestroyEnemy(space , mapInfo) ;
         InsertEnemy(mapInfo.size , space , spaceship , enemy , bullet) ;
         //Map(mapInfo , space, spaceship.heal , CurrentPoint);
@@ -1118,9 +1125,13 @@ if(bullet[i].x >= 0){
 if(bullet[i].x > 0 && (space[bullet[i].x][bullet[i].y] == '*' || space[bullet[i].x-1][bullet[i].y] == '*') ){
 
     enemy.heal-- ;
+    if(enemy.heal <1){
+        DestroyEnemy( space , mapInfo) ;
+    }
     bullet.erase(bullet.begin() + i) ;
 
     if(space[bullet[i].x + 1][bullet[i].y] != '#'){
+        
  
     space[bullet[i].x + 1][bullet[i].y]  = ' ' ;
 

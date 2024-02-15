@@ -20,7 +20,7 @@
 
 
 
-//to hold our spaceship horizontal and vertical location and it's heal
+//to hold our spaceship's location and it's heal
 struct Spaceship{
     int x ;
     int y ;
@@ -33,7 +33,7 @@ struct MapInfo{
     int point ;
 } ;
 
-
+//to save enemy's informations
 struct Enemy{
 std::string name ;
 int heal ; 
@@ -43,7 +43,7 @@ int y ;
 bool ltr ;
 } ;
 
-
+//to save bullets location
 struct Bullet {
 
 int x ; 
@@ -54,7 +54,9 @@ int y ;
 
 
 
-void SatrtMenue() ; //to make start menue
+
+
+void SatrtMenu() ; //to make start menue
 void Puase(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& CurrentPoint ,std::vector<std::vector<char>>& space ,  std::vector<Bullet>& bullet) ; //to show pause menue
 void Guidence() ; //to guide user to play
 void ExitGame() ; //to exit game
@@ -87,14 +89,14 @@ void Lose() ; //to show lose popup
 
 int main(){
 
-SatrtMenue() ;
+SatrtMenu() ;
 
 return 0 ;
 
 }
 
 //to show the menue to user and  ask how he wants to play
-void SatrtMenue(){
+void SatrtMenu(){
 system ("CLS") ;
 std::cout<<"1- Start game"<<'\n' ;
 std::cout<<"2- Load game"<<'\n' ;
@@ -149,17 +151,6 @@ for(int i = 0 ; i<bullet.size() ; i++){
 Save<<bullet[i].x<<' '<<bullet[i].y<<'\n';
 
 }
-
-
-
-
-
-
-
-
-
-
-
 
 }
 else{
@@ -353,7 +344,7 @@ void Puase(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& Current
         break;
     case 2 :
     SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo , bullet) ;
-    SatrtMenue() ;
+    SatrtMenu() ;
         break;
     default:
     std::cerr<<"invalid input"<<'\n' ;
@@ -375,7 +366,7 @@ do{
 std::cout<<"enter 0 to leave\n" ;
 std::cin>>leave ;
 if(leave == 0)
-    SatrtMenue() ;
+    SatrtMenu() ;
 else
     std::cout<<"invalid input\n" ;
 }while (leave !=0) ;
@@ -397,7 +388,7 @@ std::cin>>sure ;
 if(sure== 1)
     exit(0) ;  
 else if(sure == 0)
-    SatrtMenue() ;
+    SatrtMenu() ;
 else
     std::cout<<"invalid input"<<'\n' ;
 
@@ -426,7 +417,7 @@ std::cin>>mapInfo.size ;
         std::cout<<"the size of the map at least is 15"<<'\n' ;
     }
     else if(mapInfo.size == 0){
-        SatrtMenue() ;
+        SatrtMenu() ;
         break;
     }
     else if(mapInfo.size>=15){
@@ -497,29 +488,30 @@ void RunGame(MapInfo& mapInfo , Spaceship& spaceship , Enemy& enemy , int& Curre
 
 while(CurrentPoint<mapInfo.point){
    
-    if(spaceship.heal <1){
+if(spaceship.heal <1){
         break;
-    }
+}
 
 Mover(spaceship , enemy , space , mapInfo , CurrentPoint , bullet) ;
+MoveEnemy(spaceship , enemy , space , mapInfo , bullet) ;
 
 if(enemy.heal == 0){
     CurrentPoint += enemy.point ;
     DestroyEnemy(space , mapInfo) ;
     InsertEnemy(mapInfo.size , space , spaceship , enemy , bullet) ;
-    SaveGame (space , spaceship , enemy , CurrentPoint , mapInfo , bullet) ;
-    Map(mapInfo , space, spaceship.heal , CurrentPoint , enemy);
+    //Map(mapInfo , space, spaceship.heal , CurrentPoint , enemy);
 
 }
+
+Map(mapInfo, space, spaceship.heal , CurrentPoint , enemy) ;
+
+SaveGame( space ,  spaceship ,  enemy ,  CurrentPoint , mapInfo,  bullet) ;
+
 }
-
-
 
 if(spaceship.heal<1){
 Lose() ;
 }
-
-
 else{   
 Win(space , spaceship ,  enemy , CurrentPoint , mapInfo , bullet) ;
 }
@@ -1054,7 +1046,6 @@ if(enemy.name =="Wraith"){
         spaceship.heal-- ;
         DestroyEnemy(space , mapInfo) ;
         InsertEnemy(mapInfo.size , space , spaceship , enemy , bullet) ;
-        //Map(mapInfo , space, spaceship.heal , CurrentPoint);
     }
 }
 
@@ -1092,7 +1083,7 @@ void Attack (Spaceship& spaceship , Enemy& enemy ,std::vector<std::vector<char>>
 // for(int i = 1; i<mapInfo.size ; i++){
 //         if(space[spaceship.x-i][spaceship.y]==' '){
 //             space[spaceship.x-i][spaceship.y] ='^' ;
-//             Map(mapInfo, space, spaceship.heal , CurrentPoint) ;
+//             Map(mapInfo, space, spaceship.heal , CurrentPoint , enemy) ;
 //             std::this_thread::sleep_for(std::chrono::milliseconds(25));
 //             space[spaceship.x-i][spaceship.y] =' ' ;
 //         }
@@ -1125,18 +1116,15 @@ if(bullet[i].x >= 0){
 if(bullet[i].x > 0 && (space[bullet[i].x][bullet[i].y] == '*' || space[bullet[i].x-1][bullet[i].y] == '*') ){
 
     enemy.heal-- ;
-    if(enemy.heal <1){
-        DestroyEnemy( space , mapInfo) ;
-    }
     bullet.erase(bullet.begin() + i) ;
 
     if(space[bullet[i].x + 1][bullet[i].y] != '#'){
         
  
     space[bullet[i].x + 1][bullet[i].y]  = ' ' ;
+    }
 
    
-    }
 
     i-- ;
 
@@ -1173,8 +1161,6 @@ else{
 
 
 
-MoveEnemy(spaceship , enemy , space , mapInfo , bullet) ;
-Map(mapInfo, space, spaceship.heal , CurrentPoint , enemy) ;
 
 
 
@@ -1396,7 +1382,7 @@ GenerateGame(2) ;
 }
 else if(YN==0){
     std::ofstream("GameInfo.txt") ;
-    SatrtMenue() ;
+    SatrtMenu() ;
 }
 else{
     std::cout<<"invalid input"<<'\n' ;
@@ -1415,7 +1401,7 @@ system("CLS") ;
 std::cout<<"you faild\n" ;
 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 std::ofstream("GameInfo.txt") ;
-SatrtMenue() ;
+SatrtMenu() ;
 
 
 }

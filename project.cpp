@@ -495,7 +495,7 @@ if(spaceship.heal <1){
 Mover(spaceship , enemy , space , mapInfo , CurrentPoint , bullet) ;
 MoveEnemy(spaceship , enemy , space , mapInfo , bullet) ;
 
-if(enemy.heal == 0){
+if(enemy.heal < 1){
     CurrentPoint += enemy.point ;
     DestroyEnemy(space , mapInfo) ;
     InsertEnemy(mapInfo.size , space , spaceship , enemy , bullet) ;

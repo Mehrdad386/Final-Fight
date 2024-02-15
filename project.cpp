@@ -1116,7 +1116,6 @@ if(bullet[i].x >= 0){
 if(bullet[i].x > 0 && (space[bullet[i].x][bullet[i].y] == '*' || space[bullet[i].x-1][bullet[i].y] == '*') ){
 
     enemy.heal-- ;
-    bullet.erase(bullet.begin() + i) ;
 
     if(space[bullet[i].x + 1][bullet[i].y] != '#'){
         
@@ -1124,6 +1123,7 @@ if(bullet[i].x > 0 && (space[bullet[i].x][bullet[i].y] == '*' || space[bullet[i]
     space[bullet[i].x + 1][bullet[i].y]  = ' ' ;
     }
 
+    bullet.erase(bullet.begin() + i) ;
    
 
     i-- ;

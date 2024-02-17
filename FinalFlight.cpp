@@ -98,6 +98,28 @@ return 0 ;
 //to show the menue to user and  ask how he wants to play
 void SatrtMenu(){
 system ("CLS") ;
+std::cout<<R"( /\/\/\                            /  \
+| \  / |                         /      \
+|  \/  |                       /          \
+|  /\  |----------------------|     /\     |
+| /  \ |                      |    /  \    |
+|/    \|                      |   /    \   |
+|\    /|                      |  | (  ) |  |
+| \  / |                      |  | (  ) |  |
+|  \/  |                 /\   |  |      |  |   /\
+|  /\  |                /  \  |  |      |  |  /  \
+| /  \ |               |----| |  |      |  | |----|
+|/    \|---------------|    | | /|   .  |\ | |    |
+|\    /|               |    | /  |   .  |  \ |    |
+| \  / |               |    /    |   .  |    \    |
+|  \/  |               |  /      |   .  |      \  |
+|  /\  |---------------|/        |   .  |        \|
+| /  \ |              /   NASA   |   .  |  NASA    \
+|/    \|              (          |      |           )
+|/\/\/\|               |    | |--|      |--| |    |
+------------------------/  \-----/  \/  \-----/  \--------
+                        \\//     \\//\\//     \\//
+                         \/       \/  \/       \/)"<<'\n' ;
 std::cout<<"1- Start game"<<'\n' ;
 std::cout<<"2- Load game"<<'\n' ;
 std::cout<<"3- Guidence"<<'\n' ;
@@ -723,20 +745,20 @@ void Striker(int& size, std::vector<std::vector<char>>& space, Enemy& enemy , st
 
 if(enemy.y==size-1){
 
-if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'){
+// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'){
 
-    enemy.heal-- ;
-    for(int i = 0 ; i<bullet.size() ; i++){
-        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+//     enemy.heal-- ;
+//     for(int i = 0 ; i<bullet.size() ; i++){
+//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-               bullet.erase(bullet.begin() + i) ;
-               i-- ;
+//                bullet.erase(bullet.begin() + i) ;
+//                i-- ;
 
-        }
-    }
+//         }
+//     }
     
 
-}
+// }
 
 
 
@@ -749,20 +771,20 @@ enemy.ltr = false ;
 else{
 
 
-if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'){
+// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'){
 
-    enemy.heal-- ;
-    for(int i = 0 ; i<bullet.size() ; i++){
-        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+//     enemy.heal-- ;
+//     for(int i = 0 ; i<bullet.size() ; i++){
+//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-               bullet.erase(bullet.begin() + i) ;
-               i-- ;
+//                bullet.erase(bullet.begin() + i) ;
+//                i-- ;
 
-        }
-    }
+//         }
+//     }
     
 
-}
+// }
 
 
 
@@ -789,20 +811,20 @@ if(enemy.y==size-1 || enemy.y==size-2){
 
 
 
-if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'){
+// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'){
 
-    enemy.heal-- ;
-    for(int i = 0 ; i<bullet.size() ; i++){
-        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+//     enemy.heal-- ;
+//     for(int i = 0 ; i<bullet.size() ; i++){
+//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-               bullet.erase(bullet.begin() + i) ;
-               i-- ;
+//                bullet.erase(bullet.begin() + i) ;
+//                i-- ;
 
-        }
-    }
+//         }
+//     }
     
 
-}
+// }
 
 
 
@@ -822,20 +844,20 @@ else{
 
 
 
-if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'){
+// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'){
 
-    enemy.heal-- ;
-    for(int i = 0 ; i<bullet.size() ; i++){
-        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+//     enemy.heal-- ;
+//     for(int i = 0 ; i<bullet.size() ; i++){
+//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-               bullet.erase(bullet.begin() + i) ;
-               i-- ;
+//                bullet.erase(bullet.begin() + i) ;
+//                i-- ;
 
-        }
-    }
+//         }
+//     }
     
 
-}
+// }
 
 
 
@@ -867,20 +889,20 @@ if(enemy.y==size-1 || enemy.y==size-2 || enemy.y==size-3){
 
 
 
-if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' ||space[enemy.x+3][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'||space[enemy.x+3][enemy.y-2] == '^' || space[enemy.x][enemy.y-3] == '^' ||space[enemy.x+1][enemy.y-3] == '^'||space[enemy.x+2][enemy.y-3] == '^' ||space[enemy.x+3][enemy.y-3] ){
+// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' ||space[enemy.x+3][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'||space[enemy.x+3][enemy.y-2] == '^' || space[enemy.x][enemy.y-3] == '^' ||space[enemy.x+1][enemy.y-3] == '^'||space[enemy.x+2][enemy.y-3] == '^' ||space[enemy.x+3][enemy.y-3] ){
 
-    enemy.heal-- ;
-    for(int i = 0 ; i<bullet.size() ; i++){
-        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+//     enemy.heal-- ;
+//     for(int i = 0 ; i<bullet.size() ; i++){
+//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-               bullet.erase(bullet.begin() + i) ;
-               i-- ;
+//                bullet.erase(bullet.begin() + i) ;
+//                i-- ;
 
-        }
-    }
+//         }
+//     }
     
 
-}
+// }
 
 
 
@@ -907,20 +929,20 @@ else{
 
 
 
-if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' ||space[enemy.x+3][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'||space[enemy.x+3][enemy.y+2] == '^' || space[enemy.x][enemy.y+3] == '^' ||space[enemy.x+1][enemy.y+3] == '^'||space[enemy.x+2][enemy.y+3] == '^' ||space[enemy.x+3][enemy.y+3] ){
+// if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' ||space[enemy.x+3][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'||space[enemy.x+3][enemy.y+2] == '^' || space[enemy.x][enemy.y+3] == '^' ||space[enemy.x+1][enemy.y+3] == '^'||space[enemy.x+2][enemy.y+3] == '^' ||space[enemy.x+3][enemy.y+3] ){
 
-    enemy.heal-- ;
-    for(int i = 0 ; i<bullet.size() ; i++){
-        if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+//     enemy.heal-- ;
+//     for(int i = 0 ; i<bullet.size() ; i++){
+//         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
 
-               bullet.erase(bullet.begin() + i) ;
-               i-- ;
+//                bullet.erase(bullet.begin() + i) ;
+//                i-- ;
 
-        }
-    }
+//         }
+//     }
     
 
-}
+// }
 
 
 
@@ -1135,7 +1157,7 @@ else{
     space[bullet[i].x][bullet[i].y] = '^' ;
 
 
-    if(space[bullet[i].x + 1][bullet[i].y] != '#'){
+    if(space[bullet[i].x + 1][bullet[i].y] != '#' &&space[bullet[i].x + 1][bullet[i].y] != '*'){
  
     space[bullet[i].x + 1][bullet[i].y]  = ' ' ;
 
@@ -1148,8 +1170,9 @@ else{
 }
 }
 else{
-
+    if(space[bullet[i].x + 1][bullet[i].y] != '#' &&space[bullet[i].x + 1][bullet[i].y] != '*'){
     space[bullet[i].x + 1][bullet[i].y]  = ' ' ;
+    }
     bullet.erase(bullet.begin() + i) ;
     i-- ;
 
@@ -1247,7 +1270,6 @@ if(enemy.name == "Striker" && enemy.ltr){
 
 if(enemy.name == "Striker" && !enemy.ltr){
     if(enemy.x + 1 == spaceship.x && (enemy.y==spaceship.y|| enemy.y -1 == spaceship.y)){
-        std::cout<<"efjiefjeif" ;
         spaceship.heal-- ;
         enemy.x--;
 
@@ -1367,6 +1389,36 @@ void Win(std::vector<std::vector<char>>& space , Spaceship& spaceship , Enemy& e
 
     
 system("CLS") ;
+std::cout<<R"( !
+       !
+       ^
+      / \
+     /___\
+    |=   =|
+    |     |
+    |     |
+    |     |
+    |     |
+    |     |
+    |     |
+    |     |
+    |     |
+    |     |
+   /|##!##|\
+  / |##!##| \
+ /  |##!##|  \
+|  / ^ | ^ \  |
+| /  ( | )  \ |
+|/   ( | )   \|
+    ((   ))
+   ((  :  ))
+   ((  :  ))
+    ((   ))
+     (( ))
+      ( )
+       .
+       .
+       .)"<<'\n' ;
 std::cout<<"you won\n" ;
 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 std::cout<<"do you want continue(1 : yes , 0 : no)?\n" ;
@@ -1399,6 +1451,18 @@ void Lose(){
 
 system("CLS") ;
 std::cout<<"you faild\n" ;
+std::cout<<'\n'<<R"(     
+    _.-^^---....,,--       
+ _--                  --_  
+<                        >)
+|                         | 
+ \._                   _./  
+    ```--. . , ; .--'''       
+          | |   |             
+       .-=||  | |=-.   
+       `-=#$%&%$#=-'   
+          | ;  :|     
+ _____.,-#%&$@%#&#~,._____)" ;
 std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 std::ofstream("GameInfo.txt") ;
 SatrtMenu() ;

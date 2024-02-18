@@ -18,6 +18,7 @@
 #define CYAN "\033[36m"
 #define WHITE "\033[37m"
 
+
 // to hold our spaceship's location and it's heal
 struct Spaceship
 {
@@ -706,15 +707,15 @@ void Striker(int &size, std::vector<std::vector<char>> &space, Enemy &enemy, std
 
         // if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'){
 
-        //     enemy.heal-- ;
-        //     for(int i = 0 ; i<bullet.size() ; i++){
-        //         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+        //      enemy.heal-- ;
+        //      for(int i = 0 ; i<bullet.size() ; i++){
+        //         if((bullet[i].x == enemy.x || bullet[i].x == enemy.x-1) && (bullet[i].y == enemy.y || bullet[i].y == enemy.y-1)){
 
-        //                bullet.erase(bullet.begin() + i) ;
+        //               bullet.erase(bullet.begin() + i) ;
         //                i-- ;
 
         //         }
-        //     }
+        //      }
 
         // }
 
@@ -731,7 +732,7 @@ void Striker(int &size, std::vector<std::vector<char>> &space, Enemy &enemy, std
 
         //     enemy.heal-- ;
         //     for(int i = 0 ; i<bullet.size() ; i++){
-        //         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+        //         if((bullet[i].x == enemy.x || bullet[i].x == enemy.x-1) && (bullet[i].y == enemy.y || bullet[i].y == enemy.y+1)){
 
         //                bullet.erase(bullet.begin() + i) ;
         //                i-- ;
@@ -760,7 +761,7 @@ void Wraith(int &size, std::vector<std::vector<char>> &space, Enemy &enemy, std:
 
         //     enemy.heal-- ;
         //     for(int i = 0 ; i<bullet.size() ; i++){
-        //         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+        //        if((bullet[i].x == enemy.x || bullet[i].x == enemy.x-1 || bullet[i].x ==enemy.x-2) && (bullet[i].y == enemy.y || bullet[i].y == enemy.y-1 || bullet[i].y == enemy.y -2)){
 
         //                bullet.erase(bullet.begin() + i) ;
         //                i-- ;
@@ -788,7 +789,7 @@ void Wraith(int &size, std::vector<std::vector<char>> &space, Enemy &enemy, std:
 
         //     enemy.heal-- ;
         //     for(int i = 0 ; i<bullet.size() ; i++){
-        //         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+        //        if((bullet[i].x == enemy.x || bullet[i].x == enemy.x-1 || bullet[i].x ==enemy.x-2) && (bullet[i].y == enemy.y || bullet[i].y == enemy.y+1 || bullet[i].y == enemy.y +2)){
 
         //                bullet.erase(bullet.begin() + i) ;
         //                i-- ;
@@ -822,7 +823,7 @@ void Banshee(int &size, std::vector<std::vector<char>> &space, Enemy &enemy, std
 
         //     enemy.heal-- ;
         //     for(int i = 0 ; i<bullet.size() ; i++){
-        //         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+        //       if((bullet[i].x == enemy.x || bullet[i].x == enemy.x-1 || bullet[i].x ==enemy.x-2 || enemy.x-3) && (bullet[i].y == enemy.y || bullet[i].y == enemy.y-1 || bullet[i].y == enemy.y -2 || enemy.y - 3)){
 
         //                bullet.erase(bullet.begin() + i) ;
         //                i-- ;
@@ -857,7 +858,7 @@ void Banshee(int &size, std::vector<std::vector<char>> &space, Enemy &enemy, std
 
         //     enemy.heal-- ;
         //     for(int i = 0 ; i<bullet.size() ; i++){
-        //         if(bullet[i].x == enemy.x && bullet[i].y == enemy.y){
+        //       if((bullet[i].x == enemy.x || bullet[i].x == enemy.x-1 || bullet[i].x ==enemy.x-2 || enemy.x-3) && (bullet[i].y == enemy.y || bullet[i].y == enemy.y+1 || bullet[i].y == enemy.y + 2 || enemy.y + 3)){
 
         //                bullet.erase(bullet.begin() + i) ;
         //                i-- ;
@@ -1069,7 +1070,7 @@ void Attack(Spaceship &spaceship, Enemy &enemy, std::vector<std::vector<char>> &
             }
             else
             {
-
+            if(space[bullet[i].x][bullet[i].y] != '*')
                 space[bullet[i].x][bullet[i].y] = '^';
 
                 if (space[bullet[i].x + 1][bullet[i].y] != '#' && space[bullet[i].x + 1][bullet[i].y] != '*')

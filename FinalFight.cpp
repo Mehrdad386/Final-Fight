@@ -19,6 +19,7 @@
 #define WHITE "\033[37m"
 
 
+
 // to hold our spaceship's location and it's heal
 struct Spaceship
 {
@@ -649,9 +650,12 @@ void Map(MapInfo mapInfo, std::vector<std::vector<char>> &space, int &heal, int 
                              std::cout << "|" << ' ' <<YELLOW<< space[i][k]<<RESET << ' ';
                         if(enemy.name == "Banshee")
                              std::cout << "|" << ' ' <<BLUE<< space[i][k]<<RESET << ' ';
+                    
                     }
                     else if(space[i][k]== '#')
                          std::cout << "|" << ' ' <<CYAN<< space[i][k]<<RESET << ' ';
+                    else if(space[i][k] == '^')
+                        std::cout << "|" << ' ' <<MAGENTA<< space[i][k]<<RESET << ' ';
                     else
                         std::cout << "|" << ' ' << space[i][k] << ' ';
                             
@@ -892,6 +896,7 @@ void Banshee(int &size, std::vector<std::vector<char>> &space, Enemy &enemy, std
 void Mover(Spaceship &spaceship, Enemy &enemy, std::vector<std::vector<char>> &space, MapInfo &mapInfo, int &CurrentPoint, std::vector<Bullet> &bullet)
 {
     char move;
+    do{
     std::cin >> move;
     switch (move)
     {
@@ -912,6 +917,7 @@ void Mover(Spaceship &spaceship, Enemy &enemy, std::vector<std::vector<char>> &s
         std::cerr << "invalid input" << '\n';
         break;
     }
+}while(move != 'w' && move != 'd' && move != 'a' && move != 'p') ;
 }
 
 // to move enemy

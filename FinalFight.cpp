@@ -170,7 +170,7 @@ void SaveGame(std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy
 
         Save << enemy.name << ' ' << enemy.point << ' ' << enemy.heal << ' ' << enemy.ltr << ' ' << enemy.x << ' ' << enemy.y << '\n';
 
-        Save << mapInfo.size << ' ' << mapInfo.point << '\n';
+        Save << mapInfo.size << ' ' << mapInfo.point <<' '<<mapInfo.level<< '\n';
 
         Save << CurrentPoint << '\n';
 
@@ -289,6 +289,9 @@ void LoadGame(Spaceship &spaceship, Enemy &enemy, int &CurrentPoint, MapInfo &ma
                         break;
                     case 2:
                         mapInfo.point = stringToInt(word);
+                        break;
+                    case 3:
+                        mapInfo.level = stringToInt(word);
                         break;
 
                     default:

@@ -505,7 +505,7 @@ void RunGame(MapInfo &mapInfo, Spaceship &spaceship, Enemy &enemy, int &CurrentP
             CurrentPoint += enemy.point;
             DestroyEnemy(space, mapInfo);
             InsertEnemy(mapInfo.size, space, spaceship, enemy, bullet);
-            // Map(mapInfo , space, spaceship.heal , CurrentPoint , enemy);
+
         }
 
         Level(CurrentPoint , mapInfo) ;
@@ -721,19 +721,7 @@ void Striker(int &size, std::vector<std::vector<char>> &space, Enemy &enemy, std
     if (enemy.y == size - 1)
     {
 
-        // if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'){
 
-        //      enemy.heal-- ;
-        //      for(int i = 0 ; i<bullet.size() ; i++){
-        //         if((bullet[i].x == enemy.x || bullet[i].x == enemy.x-1) && (bullet[i].y == enemy.y || bullet[i].y == enemy.y-1)){
-
-        //               bullet.erase(bullet.begin() + i) ;
-        //                i-- ;
-
-        //         }
-        //      }
-
-        // }
 
         space[enemy.x][enemy.y] = '*';
         space[enemy.x][enemy.y - 1] = '*';
@@ -744,19 +732,7 @@ void Striker(int &size, std::vector<std::vector<char>> &space, Enemy &enemy, std
     else
     {
 
-        // if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^' ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'){
 
-        //     enemy.heal-- ;
-        //     for(int i = 0 ; i<bullet.size() ; i++){
-        //         if((bullet[i].x == enemy.x || bullet[i].x == enemy.x-1) && (bullet[i].y == enemy.y || bullet[i].y == enemy.y+1)){
-
-        //                bullet.erase(bullet.begin() + i) ;
-        //                i-- ;
-
-        //         }
-        //     }
-
-        // }
 
         space[enemy.x][enemy.y] = '*';
         space[enemy.x][enemy.y + 1] = '*';
@@ -773,19 +749,7 @@ void Wraith(int &size, std::vector<std::vector<char>> &space, Enemy &enemy, std:
     if (enemy.y == size - 1 || enemy.y == size - 2)
     {
 
-        // if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'){
 
-        //     enemy.heal-- ;
-        //     for(int i = 0 ; i<bullet.size() ; i++){
-        //        if((bullet[i].x == enemy.x || bullet[i].x == enemy.x-1 || bullet[i].x ==enemy.x-2) && (bullet[i].y == enemy.y || bullet[i].y == enemy.y-1 || bullet[i].y == enemy.y -2)){
-
-        //                bullet.erase(bullet.begin() + i) ;
-        //                i-- ;
-
-        //         }
-        //     }
-
-        // }
 
         space[enemy.x][enemy.y] = '*';
         space[enemy.x][enemy.y - 1] = '*';
@@ -801,19 +765,6 @@ void Wraith(int &size, std::vector<std::vector<char>> &space, Enemy &enemy, std:
     else
     {
 
-        // if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'){
-
-        //     enemy.heal-- ;
-        //     for(int i = 0 ; i<bullet.size() ; i++){
-        //        if((bullet[i].x == enemy.x || bullet[i].x == enemy.x-1 || bullet[i].x ==enemy.x-2) && (bullet[i].y == enemy.y || bullet[i].y == enemy.y+1 || bullet[i].y == enemy.y +2)){
-
-        //                bullet.erase(bullet.begin() + i) ;
-        //                i-- ;
-
-        //         }
-        //     }
-
-        // }
 
         space[enemy.x][enemy.y] = '*';
         space[enemy.x][enemy.y + 1] = '*';
@@ -835,19 +786,6 @@ void Banshee(int &size, std::vector<std::vector<char>> &space, Enemy &enemy, std
     if (enemy.y == size - 1 || enemy.y == size - 2 || enemy.y == size - 3)
     {
 
-        // if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y-1] == '^'||space[enemy.x+1][enemy.y-1] == '^'||space[enemy.x+2][enemy.y-1] == '^' ||space[enemy.x+3][enemy.y-1] == '^' || space[enemy.x][enemy.y-2] == '^'||space[enemy.x+1][enemy.y-2] == '^'||space[enemy.x+2][enemy.y-2] == '^'||space[enemy.x+3][enemy.y-2] == '^' || space[enemy.x][enemy.y-3] == '^' ||space[enemy.x+1][enemy.y-3] == '^'||space[enemy.x+2][enemy.y-3] == '^' ||space[enemy.x+3][enemy.y-3] ){
-
-        //     enemy.heal-- ;
-        //     for(int i = 0 ; i<bullet.size() ; i++){
-        //       if((bullet[i].x == enemy.x || bullet[i].x == enemy.x-1 || bullet[i].x ==enemy.x-2 || enemy.x-3) && (bullet[i].y == enemy.y || bullet[i].y == enemy.y-1 || bullet[i].y == enemy.y -2 || enemy.y - 3)){
-
-        //                bullet.erase(bullet.begin() + i) ;
-        //                i-- ;
-
-        //         }
-        //     }
-
-        // }
 
         space[enemy.x][enemy.y] = '*';
         space[enemy.x][enemy.y - 1] = '*';
@@ -870,19 +808,7 @@ void Banshee(int &size, std::vector<std::vector<char>> &space, Enemy &enemy, std
     else
     {
 
-        // if(space[enemy.x][enemy.y] == '^' ||space[enemy.x+1][enemy.y] == '^'||space[enemy.x+2][enemy.y] == '^' ||space[enemy.x+3][enemy.y] == '^'  ||space[enemy.x][enemy.y+1] == '^'||space[enemy.x+1][enemy.y+1] == '^'||space[enemy.x+2][enemy.y+1] == '^' ||space[enemy.x+3][enemy.y+1] == '^' || space[enemy.x][enemy.y+2] == '^'||space[enemy.x+1][enemy.y+2] == '^'||space[enemy.x+2][enemy.y+2] == '^'||space[enemy.x+3][enemy.y+2] == '^' || space[enemy.x][enemy.y+3] == '^' ||space[enemy.x+1][enemy.y+3] == '^'||space[enemy.x+2][enemy.y+3] == '^' ||space[enemy.x+3][enemy.y+3] ){
 
-        //     enemy.heal-- ;
-        //     for(int i = 0 ; i<bullet.size() ; i++){
-        //       if((bullet[i].x == enemy.x || bullet[i].x == enemy.x-1 || bullet[i].x ==enemy.x-2 || enemy.x-3) && (bullet[i].y == enemy.y || bullet[i].y == enemy.y+1 || bullet[i].y == enemy.y + 2 || enemy.y + 3)){
-
-        //                bullet.erase(bullet.begin() + i) ;
-        //                i-- ;
-
-        //         }
-        //     }
-
-        // }
 
         space[enemy.x][enemy.y] = '*';
         space[enemy.x][enemy.y + 1] = '*';

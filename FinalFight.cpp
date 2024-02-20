@@ -33,6 +33,7 @@ struct MapInfo
 {
     int size;
     int point;
+    int level ;
 };
 
 // to save enemy's informations
@@ -82,6 +83,11 @@ void LoadGame(Spaceship &spaceship, Enemy &enemy, int &CurrentPoint, MapInfo &ma
 int stringToInt(std::string txt);                                                                                                                           // to convert string to int
 void Win(std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &enemy, int &CurrentPoint, MapInfo &mapInfo, std::vector<Bullet> &bullet);      // to show win popup
 void Lose();                                                                                                                                                // to show lose popup
+void Level(int& CurrentPoint , MapInfo& mapInfo) ; //to level up
+
+
+
+
 
 int main()
 {
@@ -443,6 +449,7 @@ void GenerateGame(int choice)
 
     std::vector<Bullet> bullet;
 
+
     int CurrentPoint;
     if (choice == 1)
     {
@@ -454,6 +461,8 @@ void GenerateGame(int choice)
         spaceship.heal = 3;
 
         CurrentPoint = 0;
+
+        Level(CurrentPoint , mapInfo) ;
 
         Space(mapInfo.size, space, spaceship, enemy, bullet);
 
@@ -498,6 +507,8 @@ void RunGame(MapInfo &mapInfo, Spaceship &spaceship, Enemy &enemy, int &CurrentP
             InsertEnemy(mapInfo.size, space, spaceship, enemy, bullet);
             // Map(mapInfo , space, spaceship.heal , CurrentPoint , enemy);
         }
+
+        Level(CurrentPoint , mapInfo) ;
 
         Map(mapInfo, space, spaceship.heal, CurrentPoint, enemy);
 
@@ -626,6 +637,7 @@ void Map(MapInfo mapInfo, std::vector<std::vector<char>> &space, int &heal, int 
         std::cout << "size of the map : " << mapInfo.size << " x " << mapInfo.size << " | ";
         std::cout << "your current point : " << CurrentPoint << " | ";
         std::cout << "the total point : " << mapInfo.point << " | ";
+        std::cout << "Level : " << mapInfo.level << " | ";
         std::cout << "pause(enter p)" << '\n';
 
         for (int i = 0; i < mapInfo.size; i++)
@@ -1398,4 +1410,15 @@ void Lose()
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     std::ofstream("GameInfo.txt");
     SatrtMenu();
+}
+
+
+
+//to level up
+void Level(int& CurrentPoint , MapInfo& mapInfo){
+
+int Level = 1 + (CurrentPoint/100) ;
+
+mapInfo.level = Level ;
+
 }

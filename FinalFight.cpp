@@ -34,6 +34,7 @@ struct MapInfo
     int size;
     int point;
     int level ;
+    int DestroyedEnemy[4]{0,0,0,0} ;
 };
 
 // to save enemy's informations
@@ -82,7 +83,7 @@ void SaveGame(std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy
 void LoadGame(Spaceship &spaceship, Enemy &enemy, int &CurrentPoint, MapInfo &mapInfo, std::vector<Bullet> &bullet);                                        // to load game from aa textfile
 int stringToInt(std::string txt);                                                                                                                           // to convert string to int
 void Win(std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &enemy, int &CurrentPoint, MapInfo &mapInfo, std::vector<Bullet> &bullet);      // to show win popup
-void Lose();                                                                                                                                                // to show lose popup
+void Lose(MapInfo& mapInfo);                                                                                                                                                // to show lose popup
 void Level(int& CurrentPoint , MapInfo& mapInfo) ; //to level up
 
 
@@ -349,6 +350,8 @@ void Puase(MapInfo &mapInfo, Spaceship &spaceship, Enemy &enemy, int &CurrentPoi
     system("CLs");
     std::cout << "1- Resume game" << '\n';
     std::cout << "2- Save and Leave game" << '\n';
+    std::cout<<"destroyed enemies : \n"<<"Dart : "<<mapInfo.DestroyedEnemy[0]<<'\n'<<"Striker : "<<mapInfo.DestroyedEnemy[1]<<'\n'<<"Wraith : "<<mapInfo.DestroyedEnemy[2]<<'\n'<< "Banshee : "<<mapInfo.DestroyedEnemy[3]<<'\n' ;
+
     int option;
     do
     {
@@ -453,6 +456,7 @@ void GenerateGame(int choice)
     std::vector<Bullet> bullet;
 
 
+
     int CurrentPoint;
     if (choice == 1)
     {
@@ -520,7 +524,7 @@ void RunGame(MapInfo &mapInfo, Spaceship &spaceship, Enemy &enemy, int &CurrentP
 
     if (spaceship.heal < 1)
     {
-        Lose();
+        Lose(mapInfo);
     }
     else
     {
@@ -1070,14 +1074,37 @@ void Left(Spaceship &spaceship, Enemy &enemy, std::vector<std::vector<char>> &sp
 void DestroyEnemy(std::vector<std::vector<char>> &space, MapInfo &mapInfo)
 {
 
+    int counter = 0 ;
+
     for (int i = 0; i < mapInfo.size; i++)
     {
         for (int j = 0; j < mapInfo.size; j++)
         {
-            if (space[i][j] == '*')
+            if (space[i][j] == '*'){
                 space[i][j] = ' ';
+                counter++ ;
+            }
         }
     }
+
+switch (counter)
+{
+case 1 :
+    mapInfo.DestroyedEnemy[0]++ ;
+    break;
+case 4 :
+    mapInfo.DestroyedEnemy[1]++ ;
+    break;
+case 9 :
+    mapInfo.DestroyedEnemy[2]++ ;
+    break;
+case 16 :
+    mapInfo.DestroyedEnemy[3]++ ;
+    break;
+
+}
+
+
 }
 
 // to decrease our heal when the spaceships are in collision
@@ -1291,6 +1318,7 @@ void Win(std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &ene
        .
        .)" << '\n';
     std::cout << "you won\n";
+    std::cout<<"destroyed enemies : \n"<<"Dart : "<<mapInfo.DestroyedEnemy[0]<<'\n'<<"Striker : "<<mapInfo.DestroyedEnemy[1]<<'\n'<<"Wraith : "<<mapInfo.DestroyedEnemy[2]<<'\n'<< "Banshee : "<<mapInfo.DestroyedEnemy[3]<<'\n' ;
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     std::cout << "do you want continue(1 : yes , 0 : no)?\n";
     int YN;
@@ -1318,11 +1346,12 @@ void Win(std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &ene
 }
 
 // to show lose popup
-void Lose()
+void Lose(MapInfo& mapInfo)
 {
 
     system("CLS");
     std::cout << "you faild\n";
+    std::cout<<"destroyed enemies : \n"<<"Dart : "<<mapInfo.DestroyedEnemy[0]<<'\n'<<"Striker : "<<mapInfo.DestroyedEnemy[1]<<'\n'<<"Wraith : "<<mapInfo.DestroyedEnemy[2]<<'\n'<< "Banshee : "<<mapInfo.DestroyedEnemy[3]<<'\n' ;
     std::cout << '\n'
               << R"(     
     _.-^^---....,,--       

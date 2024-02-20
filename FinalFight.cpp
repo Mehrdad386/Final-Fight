@@ -171,7 +171,7 @@ void SaveGame(std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy
 
         Save << enemy.name << ' ' << enemy.point << ' ' << enemy.heal << ' ' << enemy.ltr << ' ' << enemy.x << ' ' << enemy.y << '\n';
 
-        Save << mapInfo.size << ' ' << mapInfo.point <<' '<<mapInfo.level<< '\n';
+        Save << mapInfo.size << ' ' << mapInfo.point <<' '<<mapInfo.level<<'\n';
 
         Save << CurrentPoint << '\n';
 

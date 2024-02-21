@@ -23,6 +23,7 @@
 // to hold our spaceship's location and it's heal
 struct Spaceship
 {
+    int type ;
     int x;
     int y;
     int heal;
@@ -86,7 +87,7 @@ void Win(std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &ene
 void Lose(Spaceship &spaceship, int &CurrentPoint, MapInfo &mapInfo); //to show lose popup                                                                                                                                               // to show lose popup
 void Level(int& CurrentPoint , MapInfo& mapInfo) ; //to level up
 void History ( Spaceship &spaceship, int &CurrentPoint, MapInfo &mapInfo) ; //to save game history on a distinct file
-
+int Type () ; //to set spaceship type
 
 
 
@@ -167,7 +168,7 @@ void SaveGame(std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy
 
     if (Save.is_open())
     {
-        Save << spaceship.heal << ' ' << spaceship.x << ' ' << spaceship.y << '\n';
+        Save << spaceship.heal << ' ' << spaceship.x << ' ' << spaceship.y<<' '<<spaceship.type << '\n';
 
         Save << enemy.name << ' ' << enemy.point << ' ' << enemy.heal << ' ' << enemy.ltr << ' ' << enemy.x << ' ' << enemy.y << '\n';
 
@@ -236,8 +237,13 @@ void LoadGame(Spaceship &spaceship, Enemy &enemy, int &CurrentPoint, MapInfo &ma
                     case 3:
                         spaceship.y = stringToInt(word);
                         break;
-                    default:
+
+                    
+                    case 4:
+                        spaceship.type = stringToInt(word);
                         break;
+
+
                     }
                 }
                 break;
@@ -381,6 +387,7 @@ void Guidence()
     std::cout << "D : move rigth and shoot" << '\n';
     std::cout << "A : move left and shoot\n";
     std::cout << "P : puse game" << '\n';
+    std::cout<< "Spaceship type : 1->power : 1 , 2->power : 2  , 3->power : 3"<<'\n' ;
     int leave;
     do
     {
@@ -462,6 +469,8 @@ void GenerateGame(int choice)
     {
 
         mapInfo = MapSize(); // size of the map
+
+        spaceship.type = Type() ;
 
         std::vector<std::vector<char>> space(mapInfo.size, std::vector<char>(mapInfo.size, ' ')); // to create empty spaces in map
 
@@ -1409,4 +1418,15 @@ std::cerr<<"can't open the file" ;
 
 History.close() ;
     
+}
+
+
+//to set spaceship type
+int Type (){
+
+int type ;
+std::cout<<"enter your spaceship's type (1,2,3) ; " ;
+std::cin>>type ;
+return type ;
+
 }

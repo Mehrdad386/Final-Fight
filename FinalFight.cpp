@@ -83,9 +83,9 @@ void SaveGame(std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy
 void LoadGame(Spaceship &spaceship, Enemy &enemy, int &CurrentPoint, MapInfo &mapInfo, std::vector<Bullet> &bullet);                                        // to load game from aa textfile
 int stringToInt(std::string txt);                                                                                                                           // to convert string to int
 void Win(std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &enemy, int &CurrentPoint, MapInfo &mapInfo, std::vector<Bullet> &bullet);      // to show win popup
-void Lose(MapInfo& mapInfo);                                                                                                                                                // to show lose popup
+void Lose(Spaceship &spaceship, int &CurrentPoint, MapInfo &mapInfo); //to show lose popup                                                                                                                                               // to show lose popup
 void Level(int& CurrentPoint , MapInfo& mapInfo) ; //to level up
-
+void History ( Spaceship &spaceship, int &CurrentPoint, MapInfo &mapInfo) ; //to save game history on a distinct file
 
 
 
@@ -524,7 +524,7 @@ void RunGame(MapInfo &mapInfo, Spaceship &spaceship, Enemy &enemy, int &CurrentP
 
     if (spaceship.heal < 1)
     {
-        Lose(mapInfo);
+        Lose(spaceship, CurrentPoint, mapInfo);
     }
     else
     {
@@ -1331,11 +1331,13 @@ void Win(std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &ene
             std::cout << "enter a new total point  : ";
             std::cin >> mapInfo.point;
             SaveGame(space, spaceship, enemy, CurrentPoint, mapInfo, bullet);
+            History ( spaceship, CurrentPoint, mapInfo) ;
             GenerateGame(2);
         }
         else if (YN == 0)
         {
             std::ofstream("GameInfo.txt");
+            History ( spaceship, CurrentPoint, mapInfo) ;
             SatrtMenu();
         }
         else
@@ -1346,7 +1348,7 @@ void Win(std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &ene
 }
 
 // to show lose popup
-void Lose(MapInfo& mapInfo)
+void Lose(Spaceship &spaceship, int &CurrentPoint, MapInfo &mapInfo)
 {
 
     system("CLS");
@@ -1367,6 +1369,7 @@ void Lose(MapInfo& mapInfo)
  _____.,-#%&$@%#&#~,._____)";
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     std::ofstream("GameInfo.txt");
+    History ( spaceship, CurrentPoint, mapInfo) ;
     SatrtMenu();
 }
 
@@ -1379,4 +1382,31 @@ int Level = 1 + (CurrentPoint/100) ;
 
 mapInfo.level = Level ;
 
+}
+
+
+
+//to save game history on a distinct file
+void History ( Spaceship &spaceship, int &CurrentPoint, MapInfo &mapInfo){
+
+std::ofstream History ;
+History.open("History.txt" , std::ios::app) ;
+
+
+
+if(History.is_open()){
+
+History<<"Game Information : "<<" Level : "<<mapInfo.level<<" Point : "<<CurrentPoint<<" Heal : "<<spaceship.heal ;
+if(CurrentPoint >= mapInfo.point)
+    History<<" Win\n" ;
+else
+    History<<" Fail\n" ;
+    
+
+}
+else
+std::cerr<<"can't open the file" ;
+
+History.close() ;
+    
 }

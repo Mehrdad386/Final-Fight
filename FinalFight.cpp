@@ -1015,8 +1015,14 @@ void Attack(Spaceship &spaceship, Enemy &enemy, std::vector<std::vector<char>> &
 
             if (bullet[i].x > 0 && (space[bullet[i].x][bullet[i].y] == '*' || space[bullet[i].x - 1][bullet[i].y] == '*'))
             {
+                if(spaceship.type == 1)
+                    enemy.heal--;
 
-                enemy.heal--;
+                if(spaceship.type == 2)
+                    enemy.heal = enemy.heal - 2 ;
+
+                if(spaceship.type == 3)
+                    enemy.heal = enemy.heal - 3 ;
 
                 if (space[bullet[i].x + 1][bullet[i].y] != '#' && space[bullet[i].x + 1][bullet[i].y] != '*')
                 {

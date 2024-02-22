@@ -64,7 +64,7 @@ void ExitGame();                                                                
 MapInfo MapSize();                                                                                                                                          // to take map size and point from user
 void GenerateGame(int choice);                                                                                                                              // to generate game
 void RunGame(MapInfo &mapInfo, Spaceship &spaceship, Enemy &enemy, int &CurrentPoint, std::vector<std::vector<char>> &space, std::vector<Bullet> &bullet);  // to run game
-void Space(int &size, std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &enemy, std::vector<Bullet> &bullet);                              // to give the first position to spaceships
+void Space(MapInfo& mapInfo, std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &enemy, std::vector<Bullet> &bullet);                              // to give the first position to spaceships
 void LoadSpace(int &size, std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &enemy, std::vector<Bullet> &bullet);                          // to load information on map
 void Map(MapInfo mapInfo, std::vector<std::vector<char>> &space, int &heal, int &CurrentPoint, Enemy enemy);                                                // to generate map
 void RandomEnemy(int &y, int &size);                                                                                                                        // to give random place to enemy
@@ -78,7 +78,7 @@ void Attack(Spaceship &spaceship, Enemy &enemy, std::vector<std::vector<char>> &
 void Right(Spaceship &spaceship, Enemy &enemy, std::vector<std::vector<char>> &space, MapInfo &mapInfo, int &CurrentPoint, std::vector<Bullet> &bullet);    // to do right action
 void Left(Spaceship &spaceship, Enemy &enemy, std::vector<std::vector<char>> &space, MapInfo &mapInfo, int &CurrentPoint, std::vector<Bullet> &bullet);     // to dp left action
 void DestroyEnemy(std::vector<std::vector<char>> &space, MapInfo &mapInfo);                                                                                 // to destroy enemy
-void InsertEnemy(int &size, std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &enemy, std::vector<Bullet> &bullet);                        // to insert enemy in map
+void InsertEnemy(MapInfo& mapInfo, std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &enemy, std::vector<Bullet> &bullet);                        // to insert enemy in map
 void Damage(Spaceship &spaceship, std::vector<std::vector<char>> &space, Enemy &enemy, MapInfo &mapInfo);                                                   // to decrease our heal when the spaceships are in collision
 void SaveGame(std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &enemy, int &CurrentPoint, MapInfo &mapInfo, std::vector<Bullet> &bullet); // to save game in a textfile
 void LoadGame(Spaceship &spaceship, Enemy &enemy, int &CurrentPoint, MapInfo &mapInfo, std::vector<Bullet> &bullet);                                        // to load game from aa textfile
@@ -480,7 +480,7 @@ void GenerateGame(int choice)
 
         Level(CurrentPoint , mapInfo) ;
 
-        Space(mapInfo.size, space, spaceship, enemy, bullet);
+        Space(mapInfo, space, spaceship, enemy, bullet);
 
         Map(mapInfo, space, spaceship.heal, CurrentPoint, enemy);
 
@@ -520,7 +520,7 @@ void RunGame(MapInfo &mapInfo, Spaceship &spaceship, Enemy &enemy, int &CurrentP
         {
             CurrentPoint += enemy.point;
             DestroyEnemy(space, mapInfo);
-            InsertEnemy(mapInfo.size, space, spaceship, enemy, bullet);
+            InsertEnemy(mapInfo, space, spaceship, enemy, bullet);
 
         }
 
@@ -542,13 +542,13 @@ void RunGame(MapInfo &mapInfo, Spaceship &spaceship, Enemy &enemy, int &CurrentP
 }
 
 // to give the first position to the spaceships
-void Space(int &size, std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &enemy, std::vector<Bullet> &bullet)
+void Space(MapInfo& mapInfo, std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &enemy, std::vector<Bullet> &bullet)
 {
 
-    spaceship.x = size - 1;
-    spaceship.y = static_cast<int>(size / 2) - 1;
+    spaceship.x = mapInfo.size - 1;
+    spaceship.y = static_cast<int>(mapInfo.size / 2) - 1;
     space[spaceship.x][spaceship.y] = '#';
-    InsertEnemy(size, space, spaceship, enemy, bullet);
+    InsertEnemy( mapInfo, space, spaceship, enemy, bullet);
 }
 
 // to give loaded value to space
@@ -589,39 +589,53 @@ void LoadSpace(int &size, std::vector<std::vector<char>> &space, Spaceship &spac
 }
 
 // to create enemy
-void InsertEnemy(int &size, std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &enemy, std::vector<Bullet> &bullet)
+void InsertEnemy(MapInfo& mapInfo, std::vector<std::vector<char>> &space, Spaceship &spaceship, Enemy &enemy, std::vector<Bullet> &bullet)
 {
-    RandomEnemy(enemy.y, size);
+    RandomEnemy(enemy.y, mapInfo.size);
     srand(time(0));
-    int RandomEnemy = rand() % 4;
+    int RandomEnemy ;
+
+    if(mapInfo.level ==1)
+        RandomEnemy = rand()%4 ;
+
+    if(mapInfo.level == 2)
+        RandomEnemy = rand()%3 ;
+    
+    if(mapInfo.level ==3)
+        RandomEnemy = rand()%2 ;
+    
+    if(mapInfo.level >=4)
+        RandomEnemy = rand()%1 ;
+    
+    
     switch (RandomEnemy)
     {
-    case 0:
+    case 3:
         enemy.name = "Dart";
         enemy.point = 2;
         enemy.x = 0;
-        Dart(size, space, enemy, bullet);
+        Dart(mapInfo.size, space, enemy, bullet);
         enemy.heal = 1;
         break;
-    case 1:
+    case 2:
         enemy.name = "Striker";
         enemy.point = 8;
         enemy.x = 0;
-        Striker(size, space, enemy, bullet);
+        Striker(mapInfo.size, space, enemy, bullet);
         enemy.heal = 2;
         break;
-    case 2:
+    case 1:
         enemy.name = "Wraith";
         enemy.point = 18;
         enemy.x = 0;
-        Wraith(size, space, enemy, bullet);
+        Wraith(mapInfo.size, space, enemy, bullet);
         enemy.heal = 4;
         break;
-    case 3:
+    case 0:
         enemy.name = "Banshee";
         enemy.point = 32;
         enemy.x = 0;
-        Banshee(size, space, enemy, bullet);
+        Banshee(mapInfo.size, space, enemy, bullet);
         enemy.heal = 6;
         break;
     }
@@ -894,7 +908,7 @@ void MoveEnemy(Spaceship &spaceship, Enemy &enemy, std::vector<std::vector<char>
         {
             spaceship.heal--;
             DestroyEnemy(space, mapInfo);
-            InsertEnemy(mapInfo.size, space, spaceship, enemy, bullet);
+            InsertEnemy(mapInfo, space, spaceship, enemy, bullet);
         }
     }
 
@@ -921,7 +935,7 @@ void MoveEnemy(Spaceship &spaceship, Enemy &enemy, std::vector<std::vector<char>
         {
             spaceship.heal--;
             DestroyEnemy(space, mapInfo);
-            InsertEnemy(mapInfo.size, space, spaceship, enemy, bullet);
+            InsertEnemy(mapInfo, space, spaceship, enemy, bullet);
         }
     }
 
@@ -948,7 +962,7 @@ void MoveEnemy(Spaceship &spaceship, Enemy &enemy, std::vector<std::vector<char>
         {
             spaceship.heal--;
             DestroyEnemy(space, mapInfo);
-            InsertEnemy(mapInfo.size, space, spaceship, enemy, bullet);
+            InsertEnemy(mapInfo, space, spaceship, enemy, bullet);
         }
     }
 
@@ -975,7 +989,7 @@ void MoveEnemy(Spaceship &spaceship, Enemy &enemy, std::vector<std::vector<char>
         {
             spaceship.heal--;
             DestroyEnemy(space, mapInfo);
-            InsertEnemy(mapInfo.size, space, spaceship, enemy, bullet);
+            InsertEnemy(mapInfo, space, spaceship, enemy, bullet);
             // Map(mapInfo , space, spaceship.heal , CurrentPoint);
         }
     }
@@ -1393,7 +1407,7 @@ void Lose(Spaceship &spaceship, int &CurrentPoint, MapInfo &mapInfo)
 //to level up
 void Level(int& CurrentPoint , MapInfo& mapInfo){
 
-int Level = 1 + (CurrentPoint/100) ;
+int Level = 1 + (CurrentPoint/200) ;
 
 mapInfo.level = Level ;
 
@@ -1436,3 +1450,6 @@ std::cin>>type ;
 return type ;
 
 }
+
+
+

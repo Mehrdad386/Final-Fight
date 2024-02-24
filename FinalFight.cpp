@@ -325,7 +325,7 @@ void LoadGame(Spaceship &spaceship, Enemy &enemy, int &CurrentPoint, MapInfo &ma
                     if (counter4 == 1)
                     {
 
-                        temp.x = stringToInt(word);
+                        temp.x = stringToInt(word) ;
                     }
 
                     if (counter4 == 2)
@@ -584,7 +584,7 @@ void LoadSpace(int &size, std::vector<std::vector<char>> &space, Spaceship &spac
     for (int i = 0; i < bullet.size(); i++)
     {
 
-        space[bullet[i].x][bullet[i].y] = '^';
+        space[bullet[i].x+1][bullet[i].y] = '^';
     }
 }
 

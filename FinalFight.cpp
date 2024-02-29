@@ -6,6 +6,10 @@
 #include <chrono>
 #include <fstream>
 #include <sstream>
+#include<conio.h>
+
+
+
 
 // the colors
 #define RESET "\033[0m"
@@ -865,7 +869,7 @@ void Mover(Spaceship &spaceship, Enemy &enemy, std::vector<std::vector<char>> &s
 {
     char move;
     do{
-    std::cin >> move;
+    move = getch() ;
     switch (move)
     {
     case 'w':
